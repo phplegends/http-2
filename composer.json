@@ -1,0 +1,24 @@
+{
+    "name": "phplegends/http-2",
+    "description": "A PHP package for HTTP",
+    "type": "Package",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Wallace de Souza Vizerra",
+            "email": "wallacemaxters@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+
+        "psr/http-message" : "1.0"
+    },
+
+    "autoload" : {
+        "psr-4" : {
+            "PHPLegends\\Http\\" : "src/"
+        },
+        "files" : ["src/functions.php"]
+    }
+}

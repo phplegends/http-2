@@ -1,0 +1,5 @@
+/vendor/
+.phpintel/
+composer.lock
+http.sublime-project
+http.sublime-workspace
