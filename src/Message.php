@@ -102,10 +102,10 @@ class Message
 
 	public function setHeaderArray(array $lines)
 	{
-		return $this->setHeader(new Header($lines));
+		return $this->setHeader(new HeaderBag($lines));
 	}
 	
-	public function setHeader(Header $header)
+	public function setHeader(HeaderBag $header)
 	{
 		$this->header = $header;
 
