@@ -10,7 +10,7 @@ use Psr\Http\Message\UploadedFileInterface;
  * @author Wallace de Souza Vizerra <wallacemaxters@gmail.com>
  * 
  * */
-class UploadedFile implements UploadedFileInterface
+class UploadedFile
 {
 
     /**
