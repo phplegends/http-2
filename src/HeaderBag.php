@@ -8,42 +8,23 @@ namespace PHPLegends\Http;
  * @package PHPLegends\Http
  * */
 
-class HeaderBag implements ArrayAccess
+class HeaderBag extends ParameterBag
 {
-	protected $items = [];
-
-	public function __construct(array $items)
-	{
-		$items && $this->setItems($items);
-	}
-
-	public function setItems(array $items)
-	{
-		foreach ($items as $name => $value) {
-
-			$this->set($name, $value);
-		}
-
-		return $this;
-	}
-
 	public function set($name, $value)
 	{
-		$this->items[$this->normalizeName($name)] = (array) $value;
-
-		return $this;
+		return parent::set($this->normalizeName($name), (array) $value);
 	}
 
 	public function get($name, $default = [])
 	{
 		$name = $this->normalizeName($name);
-
-		return $this->has($name) ? $this->items[$name] : $default;
+		
+		return array_replace([$name => $default], $this->items)[$name];
 	}
 
 	public function has($name)
 	{
-		return isset($this->items[$this->normalizeName($name)]);
+		return parent::has($this->normalizeName($name));
 	}
 
 	protected static function normalizeName($name)
@@ -57,36 +38,8 @@ class HeaderBag implements ArrayAccess
 		{
 			return implode(', ', $this->get($name));
 		}
-	}
 
-
-	public function offsetSet($key)
-	{
-		return $this->set($key, $value);
-	}
-
-	public function offsetExists($key)
-	{
-		return $this->has($key);
-	}
-
-	public function offsetUnset($key)
-	{
-		$this->remove($key);
-	}
-
-	public function offsetGet($key)
-	{
-		return $this->get($key, []);
-	}
-
-	public function remove($key)
-	{
-		$value = $this->get($key);
-
-		unset($this->items[$key]);
-
-		return $value;
+		return null;
 	}
 
 	public function getLineList()
