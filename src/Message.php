@@ -6,7 +6,7 @@ namespace PHPLegends\Http;
  * @author Wallace de Souza Vizerra <wallacemaxters@gmail.com>
  * */
 
-class Message
+abstract class Message
 {
 
 	/**
@@ -16,9 +16,9 @@ class Message
 	protected $body;
 
 	/**
-	 * @var array
+	 * @var HeaderBag
 	 * */
-	protected $headers = [];
+	protected $headerBag;
 
 	/**
 	 * @var string
@@ -31,11 +31,11 @@ class Message
 	 * @param string $body
 	 * @param Header|array|null $headers
 	 * */
-	public function __construct($body, $header = null)
+	public function __construct($body, $headers = null)
 	{
 		$this->setBody($body);
 
-		$this->resolveHeaderValue($header);
+		$this->resolveHeaderValue($headers);
 	}
 
 	/**
@@ -63,15 +63,15 @@ class Message
 	}
 
 	/**
-	 * @return Header
+	 * @return HeaderBag
 	 */
-	public function getHeader()
+	public function getHeaderBag()
 	{
-	    return $this->header;
+	    return $this->headerBag;
 	}
 
 	/**
-	 * Resolve value for Header creation
+	 * Resolve value for HeaderBag creation
 	 * 
 	 * @param null|array|\ArrayObject|PHPLegends\Http\Header $header
 	 * @return self
@@ -82,32 +82,36 @@ class Message
 
 		if ($header === null) {
 
-			return $this->setHeader(new Header([]));
+			return $this->setHeaders([]);
 
 		} elseif (is_array($header)) {
 
-			return $this->setHeaderArray($header);
+			return $this->setHeaders($header);
 
 		} elseif ($header instanceof \ArrayObject)  {
 
-			return $this->setHeaderArray($header->getArrayCopy());
+			return $this->setHeaders($header->getArrayCopy());
 
 		} elseif ($header instanceof Header) {
 
-			return $this->setHeader($header);
+			return $this->setHeaderBag($header);
 		}
 
 		throw new \InvalidArgumentException('Header is not array or Header object');
 	}
 
-	public function setHeaderArray(array $lines)
+	/**
+	 * 
+	 * @param array 
+	 * */
+	public function setHeaders(array $lines)
 	{
-		return $this->setHeader(new HeaderBag($lines));
+		return $this->setHeaderBag(new HeaderBag($lines));
 	}
 	
-	public function setHeader(HeaderBag $header)
+	public function setHeaderBag(HeaderBag $headerBag)
 	{
-		$this->header = $header;
+		$this->headerBag = $headerBag;
 
 		return $this;
 	}
