@@ -28,12 +28,12 @@ abstract class Message
 	/**
 	 * 
 	 * 
-	 * @param string $body
+	 * @param string $contents
 	 * @param Header|array|null $headers
 	 * */
-	public function __construct($body, $headers = null)
+	public function __construct($contents, $headers = null)
 	{
-		$this->setBody($body);
+		$this->setContents($body);
 
 		$this->resolveHeaderValue($headers);
 	}
@@ -121,9 +121,9 @@ abstract class Message
 	 *
 	 * @return string
 	 */
-	public function getBody()
+	public function getContents()
 	{
-	    return $this->body;
+	    return $this->contents;
 	}
 
 	/**
@@ -133,9 +133,9 @@ abstract class Message
 	 *
 	 * @return self
 	 */
-	public function setBody($body)
+	public function setContents($contents)
 	{
-	    $this->body = (string) $body;
+	    $this->contents = (string) $contents;
 
 	    return $this;
 	}

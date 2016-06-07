@@ -24,12 +24,12 @@ class UploadedFile
     protected $size = 0;
 
     /**
-     * @var 
+     * @var string
      * */
     protected $clientFilename;
 
     /**
-     * 
+     * @var int
      * */
     protected $error;
 
@@ -51,7 +51,7 @@ class UploadedFile
      * @var array
      * */
     protected $errorMessages = [
-        UPLOAD_ERR_OK       => 'There is no error, the file uploaded with success',
+        //UPLOAD_ERR_OK       => 'There is no error, the file uploaded with success',
         UPLOAD_ERR_INI_SIZE   => 'The uploaded file exceeds the upload_max_filesize directive in php.ini',
         UPLOAD_ERR_FORM_SIZE  => 'The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form',
         UPLOAD_ERR_PARTIAL    => 'The uploaded file was only partially uploaded',
@@ -106,7 +106,7 @@ class UploadedFile
     /**
      * Gets the value of clientFilename.
      *
-     * @return mixed
+     * @return string
      */
     public function getClientFilename()
     {
@@ -133,13 +133,11 @@ class UploadedFile
         return $this->clientMediaType;
     }
 
-    public function getStream()
-    {
-        $this->assertNotMoved()->assertOk();
-
-        return new Stream($this->getFile(), 'rb');
-    }
-
+    /**
+     * 
+     * 
+     * @return \SplFileObject
+     * */
     public function getFileObject()
     {
         return new \SplFileObject($this->assertNotMoved()->getFile(), 'r');
@@ -243,6 +241,6 @@ class UploadedFile
             return $this->errorMessages[$this->error];
         }
 
-        return 'Unknow error';
+        return 'Unknow upload error';
     }
 }

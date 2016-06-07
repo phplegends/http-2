@@ -8,8 +8,15 @@ namespace PHPLegends\Http;
  * @package PHPLegends\Http
  * */
 
-class HeaderBag extends ParameterBag
-{
+class HeaderCollection extends ParameterCollection
+{	
+	/**
+	 * Sets an value for header
+	 * 
+	 * @param string $name
+	 * @param string|array $value
+	 * @return self
+	 **/
 	public function set($name, $value)
 	{
 		return parent::set($this->normalizeName($name), (array) $value);
@@ -27,11 +34,23 @@ class HeaderBag extends ParameterBag
 		return parent::has($this->normalizeName($name));
 	}
 
+	/**
+	 * Normalize the header name
+	 * 
+	 * @param string $name
+	 * @return string
+	 * */
 	protected static function normalizeName($name)
 	{
 		return mb_convert_case($name, MB_CASE_TITLE);
 	}
 
+	/**
+	 * Get the line for header item name.
+	 * 
+	 * @param string $name
+	 * @return string|null
+	 * */
 	public function getLine($name)
 	{
 		if ($this->has($name))
@@ -42,7 +61,12 @@ class HeaderBag extends ParameterBag
 		return null;
 	}
 
-	public function getLineList()
+	/**
+	 * 
+	 * Get all line of headers formated
+	 * @return array
+	 * */
+	public function getFormated()
 	{
 		$items = [];
 

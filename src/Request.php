@@ -11,12 +11,6 @@ use Psr\Http\Message\UriInterface;
  * */
 class Request extends Message
 {
-
-	/**
-	 *  @var string | null
-	 **/
-	protected $requestTarget;
-
 	/**
 	 * @var Psr\Http\Message\UriInterface
 	 * */
@@ -31,23 +25,24 @@ class Request extends Message
 
 	/**
 	 * @param string $method
-	 * @param Psr\Http\Message\UriInterface $uri
-	 * @param array $headers
-	 * @param Psr\Http\Message\StreamInterface | null $body
+	 * @param Uri|string $uri
+	 * @param $headers
+	 * @param string $body
 	 * @param string $protocolVersion
 	 * */
     public function __construct (
     	$method,
-    	Uri $uri,
+    	$uri,
     	$headers = [],
-    	$body,
+    	$body = '',
     	$protocolVersion = '1.1'
     ) {
 
       	parent::__construct($body, $headers);
 
       	$this->setMethod($method)
-        	  ->setUri($uri)
+        	  ->resolveUriValue($uri)
+        	  ->resolveHeaderValue($headers)
         	  ->setProtocolVersion($protocolVersion);
     }
 
@@ -73,17 +68,45 @@ class Request extends Message
 	}
 
 	/**
-	 * @{inheritdoc}
+	 * Gets the Uri
+	 * 
+	 * @return Uri
 	 * */
 	public function getUri()
 	{
 		return $this->uri;
 	}
 
+	/**
+	 * Sets the Uri
+	 * 
+	 * @param Uri $uri
+	 * @return self
+	 * */
 	public function setUri(Uri $uri)
 	{
 		$this->uri = $uri;
 
 		return $this;
+	}
+
+	/**
+	 * Resolves the value for Uri
+	 * 
+	 * @param string|Uri $uri
+	 * @return self
+	 * */
+	protected function resolveUriValue($uri)
+	{
+		if (is_string($uri))
+		{
+			$uri = new Uri($uri);
+
+		} elseif (! $uri instanceof Uri) {
+
+			throw new \UnexpectedValueException('Invalid value for URI');
+		}
+
+		return $this->setUri($uri);
 	}
 }

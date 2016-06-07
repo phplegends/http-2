@@ -8,7 +8,10 @@ namespace PHPLegends\Http;
 
 class Uri
 {
-        
+    /**
+     * 
+     * @var array
+     * */
     protected $components = [
         'host'     => '',
         'port'     => NULL,
@@ -45,6 +48,11 @@ class Uri
 		return $this->components['query'];
 	}
 
+    /**
+     * Get parsed query string
+     * 
+     * @return array
+     * */
     public function getQueryAsArray()
     {
         parse_str($this->getQueryString(), $query);
@@ -53,6 +61,7 @@ class Uri
     }
 
     /**
+     * Get a parameter bag for Query String
      * 
      * @return ParameterBag
      * */
@@ -93,7 +102,7 @@ class Uri
     }
 
     /**
-     * @{inheritdoc}
+     * @return string
      * */
     public function getHost()
     {
@@ -101,7 +110,7 @@ class Uri
     }
 
     /**
-     * @{inheritdoc}
+     * @return string
      * */
     public function getPath()
     {
@@ -109,7 +118,7 @@ class Uri
     }
 
     /**
-     * @{inheritdoc}
+     * @return string
      * */
     public function getFragment()
     {
@@ -117,15 +126,13 @@ class Uri
     }
 
     /**
-
+     *
      * @param string $scheme
      * @return self
      * */
     public function setScheme($scheme)
     {
-    
-        if (! is_string($scheme))
-        {
+        if (! is_string($scheme)) {
             throw new \InvalidArgumentException('Invalid scheme');
         }
 
@@ -135,8 +142,6 @@ class Uri
 
         return $this;
     }
-
-
     /**
      * @return string
      * */

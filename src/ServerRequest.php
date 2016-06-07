@@ -13,83 +13,47 @@ use Psr\Http\Message\StreamInterface;
  * */
 class ServerRequest extends Request
 {
-	protected $serverParams = [];
+	protected $server;
 
-	protected $cookieParams = [];
+	protected $cookies;
 
-	protected $queryParams = [];
+	protected $query;
 
-	protected $uploadedFiles = [];
+    protected $body;
+    
+    protected $uploadedFiles;
 
-	protected $attributes = [];
-
-    protected $parsedBody = [];
-
+    protected $rawBody = null;
 
     /**
      * The object constructor ;)
      * 
      * @param string $method
-     * @param \Psr\Http\Message\UriInterface $uri
-     * @param array $headers
+     * @param Uri | string $uri
+     * @param HeaderBag|array $headers
+     * @param $parameters
      * @param $body
+     * @param 
      * @param string $protocolVersion
      * @param array $serverParams
      * */
     public function __construct (
     	$method,
-    	Uri $uri,
-    	$headers = [],
-    	StreamInterface $body = null,
+    	$uri,
+    	$header,
     	$protocolVersion = '1.1',
     	$serverParams = []
     ) {
 
-    	parent::__construct($method, $uri, $headers, $body, $protocolVersion);
+        $this->setMethod($method)
+              ->resolveUriValue($uri)
+              ->resolveHeaderValue($header)
+              ->setProtocolVersion($protocolVersion);
 
     	$this->serverParams = $serverParams;
     }
 
-    /**
-     * Gets the value of serverParams.
-     *
-     * @return mixed
-     */
-    public function getServer()
-    {
-        return $this->serverParams;
-    }
-
-    /**
-     * Gets the value of cookieParams.
-     *
-     * @return mixed
-     */
-    public function getCookies()
-    {
-        return $this->cookieParams;
-    }
-
-    /**
-     * Gets the value of queryParams.
-     *
-     * @return mixed
-     */
-    public function getQuery()
-    {
-        return $this->queryParams;
-    }
-
-    /**
-     * Gets the value of uploadedFiles.
-     *
-     * @return mixed
-     */
-    public function getUploadedFiles()
-    {
-        return $this->uploadedFiles;
-    }
-
+    
     /**
      * Normalizes the value of uploadedFiles.
      *
@@ -140,106 +104,47 @@ class ServerRequest extends Request
         );
     }
 
-    /**
-     * 
-     * @param Cookie[]
-     * */
-    public function setCookies(array $cookies)
-    {
-        $this->cookieParams = $cookies;
-
-        return $this;
-    }
-
-    public function setQuery(array $params)
-    {   
-        $clone = clone $this;
-
-        $clone->queryParams = $params;
-
-        return $clone;
-    }
-
-    /**
-     * 
-     * 
-     * @return self
-     * */
-    public function setUploadedFiles(array $files)
-    {
-        $this->uploadedFiles = $files;
-
-        return $this;
-    }
-
-    public function getParsedBody()
-    {
-        return $this->parsedBody;
-    }
-
-    public function withAttribute($name, $attribute)
-    {
-        $clone = clone $this;
-
-        $clone->attributes[$name] = $attributes;
-
-        return $clone;
-    }
-
-    public function withParsedBody($data)
-    {
-        $clone = clone $this;
-
-        $clone->parsedBody = $data;
-
-        return $clone;
-    }
-
-    public function withoutAttribute($name)
-    {
-        if (! isset($this->attributes[$name])) {
-
-            return clone $this;
-        }
-
-        $clone = clone $this;
-
-        unset($clone->attribute[$name]);
-
-        return $clone;
-    }
-
-    public function getAttribute($name, $default = null)
-    {
-        if (isset($this->attributes[$name])) {
-
-            return $this->attributes[$name];
-        }
-
-        return $default;
-    }
-
     public static function createFromGlobals()
     {
 
-        $method = isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : 'GET';
+        $method = 'GET';
+        $rawBody = null;
+        $protocol = '1.1';
+
+        if (isset($_SERVER['REQUEST_METHOD'])) {
+
+            $method = $_SERVER['REQUEST_METHOD'];
+        }
 
         $headers = \PHPLegends\Http\get_all_headers();
 
-        $body = new Stream('php://input', 'r+');
+        if (! in_array($method, ['GET', 'POST'])) {
+            $rawBody = file_get_contents('php://input');
+        }
 
-        $protocol = isset($_SERVER['SERVER_PROTOCOL']) ? str_replace('HTTP/', '', $_SERVER['SERVER_PROTOCOL']) : '1.1';
+        if (isset($_SERVER['SERVER_PORT'])) {
+
+            $protocol = str_replace('HTTP/', '', $_SERVER['SERVER_PORT']);
+        }
 
         $uri = static::createUriFromGlobals();
 
-        $serverRequest = new self($method, $uri, $headers, $body, $protocol, $_SERVER);
+        $serverRequest = new self(
+            $method, $uri, $headers, $protocol, new ParameterCollection($_SERVER)
+        );
 
+        $serverRequest
+            ->setQuery(new ParameterCollection($_GET))
+            ->setBody(new ParameterCollection($_POST))
+            ->setCookies(new CookieJar($_COOKIE))
+            ->setUploadedFiles(
+                new ParameterCollection(
+                    static::normalizeUploadedFiles($_FILES)
+                )
+            )
+            ->setRawBody($rawBody);
 
-        return $serverRequest
-                    ->withQueryParams($_GET)
-                    ->withParsedBody($_POST)
-                    ->withCookieParams($_COOKIE)
-                    ->withUploadedFiles(static::normalizeUploadedFiles($_FILES));
+        return $request;
     }
 
     public static function createUriFromGlobals()
@@ -249,31 +154,31 @@ class ServerRequest extends Request
 
         if (isset($_SERVER['HTTPS'])) {
 
-            $uri = $uri->withScheme($_SERVER['HTTPS'] == 'on' ? 'https' : 'http');
+            $uri = $uri->setScheme($_SERVER['HTTPS'] == 'on' ? 'https' : 'http');
         }
 
         if (isset($_SERVER['HTTP_HOST'])) {
 
-            $uri = $uri->withHost($_SERVER['HTTP_HOST']);
+            $uri = $uri->setHost($_SERVER['HTTP_HOST']);
 
         } elseif (isset($_SERVER['SERVER_NAME'])) {
 
-            $uri = $uri->withHost($_SERVER['SERVER_NAME']);
+            $uri = $uri->setHost($_SERVER['SERVER_NAME']);
         }
 
         if (isset($_SERVER['SERVER_PORT'])) {
 
-            $uri = $uri->withPort($_SERVER['SERVER_PORT']);
+            $uri = $uri->setPort($_SERVER['SERVER_PORT']);
         }
 
         if (isset($_SERVER['REQUEST_URI'])) {
 
-            $uri = $uri->withPath(strtok($_SERVER['REQUEST_URI'], '?'));
+            $uri = $uri->setPath(strtok($_SERVER['REQUEST_URI'], '?'));
         }
 
         if (isset($_SERVER['QUERY_STRING'])) {
 
-            $uri = $uri->withQuery($_SERVER['QUERY_STRING']);
+            $uri = $uri->setQuery($_SERVER['QUERY_STRING']);
         }
         
         return $uri;
@@ -284,13 +189,147 @@ class ServerRequest extends Request
         return $this->getUri()->getScheme() === 'https';
     }
 
-    public function withAttributes(array $attributes)
+    /**
+     * Gets the value of server.
+     *
+     * @return mixed
+     */
+    public function getServer()
     {
-        $clone = clone $this;
-
-        $clone->attributes = $attribute += $clone->attributes;
-
-        return $clone;
+        return $this->server;
     }
 
+    /**
+     * Sets the value of server.
+     *
+     * @param mixed $server the server
+     *
+     * @return self
+     */
+    public function setServer(ParameterCollection $server)
+    {
+        $this->server = $server;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of cookies.
+     *
+     * @return mixed
+     */
+    public function getCookies()
+    {
+        return $this->cookies;
+    }
+
+    /**
+     * Sets the value of cookie.
+     *
+     * @param mixed $cookies the cookie
+     *
+     * @return self
+     */
+    public function setCookies(CookieJar $cookies)
+    {
+        $this->cookies = $cookies;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of query.
+     *
+     * @return mixed
+     */
+    public function getQuery()
+    {
+        return $this->query;
+    }
+
+    /**
+     * Sets the value of query.
+     *
+     * @param mixed $query the query
+     *
+     * @return self
+     */
+    public function setQuery(ParameterCollection $query)
+    {
+        $this->query = $query;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of body.
+     *
+     * @return mixed
+     */
+    public function getBody()
+    {
+        return $this->body;
+    }
+
+    /**
+     * Sets the value of body.
+     *
+     * @param mixed $body the body
+     *
+     * @return self
+     */
+    public function setBody(ParameterCollection $body)
+    {
+        $this->body = $body;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of uploadedFiles.
+     *
+     * @return mixed
+     */
+    public function getUploadedFiles()
+    {
+        return $this->uploadedFiles;
+    }
+
+    /**
+     * Sets the value of uploadedFiles.
+     *
+     * @param mixed $uploadedFiles the uploaded files
+     *
+     * @return self
+     */
+    public function setUploadedFiles(ParameterCollection $uploadedFiles)
+    {
+        $this->uploadedFiles = $uploadedFiles;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of rawBody.
+     *
+     * @return mixed
+     */
+    public function getRawBody()
+    {
+        return $this->rawBody;
+    }
+
+    /**
+     * Sets the value of rawBody.
+     *
+     * @param mixed $rawBody the raw body
+     *
+     * @return self
+     */
+    public function setRawBody($rawBody)
+    {
+        $this->rawBody = $rawBody;
+
+        return $this;
+    }
 }
