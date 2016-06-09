@@ -12,7 +12,9 @@ use Psr\Http\Message\UriInterface;
 class Request extends Message
 {
 	/**
-	 * @var Psr\Http\Message\UriInterface
+	 * Uri instance
+	 * 
+	 * @var Uri
 	 * */
 	protected $uri;
 
@@ -36,7 +38,8 @@ class Request extends Message
     }
 
 	/**
-	 * @{inheritdoc}
+	 * 
+	 * @return string
 	 * */
 	public function getMethod()
 	{
