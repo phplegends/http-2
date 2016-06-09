@@ -5,7 +5,6 @@ namespace PHPLegends\Http;
 use PHPLegends\Collections\Collection;
 
 /**
- * Não gosto do nome, mas vou deixar por padrão :(
  * 
  * @author Wallace de Souza Vizerra <wallacemaxters@gmail.com>
  * 
