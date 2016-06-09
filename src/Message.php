@@ -16,7 +16,7 @@ abstract class Message
 	protected $body;
 
 	/**
-	 * @var HeaderBag
+	 * @var HeaderCollection
 	 * */
 	protected $headerBag;
 
