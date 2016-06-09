@@ -26,24 +26,13 @@ class Request extends Message
 	/**
 	 * @param string $method
 	 * @param Uri|string $uri
-	 * @param $headers
 	 * @param string $body
-	 * @param string $protocolVersion
 	 * */
-    public function __construct (
-    	$method,
-    	$uri,
-    	$headers = [],
-    	$body = '',
-    	$protocolVersion = '1.1'
-    ) {
+    public function __construct ($method, $uri, $body = '') {
 
-      	parent::__construct($body, $headers);
+      	parent::__construct($body);
 
-      	$this->setMethod($method)
-        	  ->resolveUriValue($uri)
-        	  ->resolveHeaderValue($headers)
-        	  ->setProtocolVersion($protocolVersion);
+      	$this->setMethod($method)->resolveUriValue($uri);
     }
 
 	/**
