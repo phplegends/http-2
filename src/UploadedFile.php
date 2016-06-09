@@ -2,8 +2,6 @@
 
 namespace PHPLegends\Http;
 
-use Psr\Http\Message\UploadedFileInterface;
-
 /**
  * This class represents an uploaded http file
  * 
