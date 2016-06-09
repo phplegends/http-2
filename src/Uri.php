@@ -63,11 +63,11 @@ class Uri
     /**
      * Get a parameter bag for Query String
      * 
-     * @return ParameterBag
+     * @return ParameterCollection
      * */
     public function getQuery()
     {
-        return new ParameterBag($this->getQueryAsArray());
+        return new ParameterCollection($this->getQueryAsArray());
     }
 
     /**
