@@ -69,36 +69,35 @@ abstract class Message
 	 * @return self
 	 * @throws \InvalidArgumentException
 	 * */
-	protected function resolveHeaderValue($header)
+	protected function resolveHeaderValue($headers)
 	{	
 
-		if ($header === null) {
+		if ($headers === null) {
 
-			return $this->setHeaders([]);
+			$headers = new HeaderCollection;
 
-		} elseif (is_array($header)) {
+		} elseif (is_array($headers)) {
 
-			return $this->setHeaders($header);
+			$headers = new HeaderCollection($headers);
 
-		} elseif ($header instanceof \ArrayObject)  {
+		} elseif (! $headers instanceof HeaderCollection) {
 
-			return $this->setHeaders($header->getArrayCopy());
-
-		} elseif ($header instanceof Header) {
-
-			return $this->setHeaderBag($header);
+			throw new \InvalidArgumentException('Header is not array or Header object');
+			
 		}
 
-		throw new \InvalidArgumentException('Header is not array or Header object');
+		return $this->setHeaders($headers);
 	}
 
 	/**
 	 * 
 	 * @param HeaderCollection $header 
 	 * */
-	public function setHeaders(HeaderCollection $header)
+	public function setHeaders(HeaderCollection $headers)
 	{
-		return $this->setHeaderBag($header);
+		$this->headers = $headers;
+
+		return $this;
 	}
 
 	/**
