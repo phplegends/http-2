@@ -15,7 +15,6 @@ class CookieJar extends Collection
     
     /**
      *
-     * 
      * @param string $name
      * @param string $value
      * @param \DateTime|string|integer
