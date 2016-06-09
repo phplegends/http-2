@@ -10,6 +10,7 @@ namespace PHPLegends\Http;
 
 class HeaderCollection extends ParameterCollection
 {	
+
 	/**
 	 * Sets an value for header
 	 * 
@@ -20,6 +21,22 @@ class HeaderCollection extends ParameterCollection
 	public function set($name, $value)
 	{
 		return parent::set($this->normalizeName($name), (array) $value);
+	}
+
+	/**
+	 * 
+	 * @param array $items
+	 * @return self
+	 * */
+	public function setItems(array $items)
+	{
+		foreach ($items as $name => $value) {
+
+			$this->set($name, $value);
+			
+		}
+
+		return $this;
 	}
 
 	public function get($name, $default = [])
