@@ -6,13 +6,17 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 
 /**
+ * Represents the HTTP Response
+ * 
  * @author Wallace de Souza Vizerra <wallacemaxters@gmail.com>
+ * 
  * */
 class Response extends Message
 {
 	
     /**
-    * @var
+     * 
+     * @var array
     */
     protected $phrases = [
         100 => 'Continue',
@@ -86,13 +90,16 @@ class Response extends Message
 	protected $statusCode = 200;
 
 
-	public function __construct($body, $code = 200, array $headers = [])
+	public function __construct($content, $code = 200, $headers = [])
 	{
-        $headers += ['Content-Type' => 'text/html; charset=utf-8;'];
-
         $this->setStatusCode($code);
                 
-        parent::__construct($body, $headers);
+        parent::__construct($content, $headers);
+
+        if (! $this->getHeaders()->has('Content-Type')) {
+
+            $this->getHeaders()->set('Content-Type', 'text/html; charset=utf-8');
+        }
 	}
 
     /**
