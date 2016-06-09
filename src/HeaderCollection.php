@@ -43,7 +43,7 @@ class HeaderCollection extends ParameterCollection
 	{
 		$name = $this->normalizeName($name);
 		
-		return array_replace([$name => $default], $this->items)[$name];
+		return array_replace([$name => $default], $this->all())[$name];
 	}
 
 	public function has($name)
