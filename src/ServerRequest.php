@@ -31,7 +31,6 @@ class ServerRequest extends Request
               ->resolveUriValue($uri)
               ->setServer($server);
 
-
         if ($this->getUri()->getQueryString()) {
 
             $this->setQuery($this->getUri()->getQuery());
@@ -52,7 +51,7 @@ class ServerRequest extends Request
 
         foreach ($uploadedFiles as $key => $value) {
 
-            if ($value instanceof UploadedFileInterface) {
+            if ($value instanceof UploadedFile) {
 
                 $files[$key] = $value;
 
