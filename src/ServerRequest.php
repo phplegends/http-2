@@ -25,32 +25,17 @@ class ServerRequest extends Request
 
     protected $rawBody = null;
 
-    /**
-     * The object constructor ;)
-     * 
-     * @param string $method
-     * @param Uri | string $uri
-     * @param HeaderBag|array $headers
-     * @param $parameters
-     * @param $body
-     * @param 
-     * @param string $protocolVersion
-     * @param array $serverParams
-     * */
-    public function __construct (
-    	$method,
-    	$uri,
-    	$header,
-    	$protocolVersion = '1.1',
-    	$serverParams = []
-    ) {
+    public function __construct($method, $uri, ParameterCollection $server) {
 
         $this->setMethod($method)
               ->resolveUriValue($uri)
-              ->resolveHeaderValue($header)
-              ->setProtocolVersion($protocolVersion);
+              ->setServer($server);
 
-    	$this->serverParams = $serverParams;
+
+        if ($this->getUri()->getQueryString()) {
+
+            $this->setQuery($this->getUri()->getQuery());
+        }
     }
 
     
@@ -129,11 +114,11 @@ class ServerRequest extends Request
 
         $uri = static::createUriFromGlobals();
 
-        $serverRequest = new self(
-            $method, $uri, $headers, $protocol, new ParameterCollection($_SERVER)
+        $request = new self(
+            $method, $uri, new ParameterCollection($_SERVER)
         );
 
-        $serverRequest
+        $request
             ->setQuery(new ParameterCollection($_GET))
             ->setBody(new ParameterCollection($_POST))
             ->setCookies(new CookieJar($_COOKIE))
@@ -220,7 +205,7 @@ class ServerRequest extends Request
      */
     public function getCookies()
     {
-        return $this->cookies;
+        return $this->cookies ?: $this->cookies = new CookieJar;
     }
 
     /**
@@ -240,11 +225,11 @@ class ServerRequest extends Request
     /**
      * Gets the value of query.
      *
-     * @return mixed
+     * @return \PHPLegends\Http\ParameterCollection
      */
     public function getQuery()
     {
-        return $this->query;
+        return $this->query ?: $this->query = new ParameterCollection;
     }
 
     /**
@@ -264,11 +249,11 @@ class ServerRequest extends Request
     /**
      * Gets the value of body.
      *
-     * @return mixed
+     * @return ParameterCollection
      */
     public function getBody()
     {
-        return $this->body;
+        return $this->body ?: $this->body = new ParameterCollection;
     }
 
     /**
@@ -288,11 +273,11 @@ class ServerRequest extends Request
     /**
      * Gets the value of uploadedFiles.
      *
-     * @return mixed
+     * @return ParameterCollection
      */
     public function getUploadedFiles()
     {
-        return $this->uploadedFiles;
+        return $this->uploadedFiles ?: $this->uploadedFiles = new ParameterCollection;
     }
 
     /**
@@ -312,7 +297,7 @@ class ServerRequest extends Request
     /**
      * Gets the value of rawBody.
      *
-     * @return mixed
+     * @return string|null
      */
     public function getRawBody()
     {
@@ -322,7 +307,7 @@ class ServerRequest extends Request
     /**
      * Sets the value of rawBody.
      *
-     * @param mixed $rawBody the raw body
+     * @param string|null $rawBody the raw body
      *
      * @return self
      */
