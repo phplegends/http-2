@@ -13,12 +13,12 @@ abstract class Message
 	 * 
 	 * @var string
 	 * */
-	protected $body;
+	protected $content;
 
 	/**
 	 * @var HeaderCollection
 	 * */
-	protected $headerBag;
+	protected $headers;
 
 	/**
 	 * @var string
@@ -28,12 +28,12 @@ abstract class Message
 	/**
 	 * 
 	 * 
-	 * @param string $contents
+	 * @param string $content
 	 * @param Header|array|null $headers
 	 * */
-	public function __construct($contents, $headers = null)
+	public function __construct($content, $headers = null)
 	{
-		$this->setContents($body);
+		$this->setContent($content);
 
 		$this->resolveHeaderValue($headers);
 	}
@@ -60,14 +60,6 @@ abstract class Message
 	    $this->protocolVersion = (string) $protocolVersion;
 
 	    return $this;
-	}
-
-	/**
-	 * @return HeaderBag
-	 */
-	public function getHeaderBag()
-	{
-	    return $this->headerBag;
 	}
 
 	/**
@@ -102,18 +94,21 @@ abstract class Message
 
 	/**
 	 * 
-	 * @param array 
+	 * @param HeaderCollection $header 
 	 * */
-	public function setHeaders(array $lines)
+	public function setHeaders(HeaderCollection $header)
 	{
-		return $this->setHeaderBag(new HeaderBag($lines));
+		return $this->setHeaderBag($header);
 	}
-	
-	public function setHeaderBag(HeaderBag $headerBag)
-	{
-		$this->headerBag = $headerBag;
 
-		return $this;
+	/**
+	 * 
+	 * @return HeaderCollection
+	 * */
+
+	public function getHeaders()
+	{
+		return $this->headers;
 	}
 
 	/**
@@ -121,9 +116,9 @@ abstract class Message
 	 *
 	 * @return string
 	 */
-	public function getContents()
+	public function getContent()
 	{
-	    return $this->contents;
+	    return $this->content;
 	}
 
 	/**
@@ -133,9 +128,9 @@ abstract class Message
 	 *
 	 * @return self
 	 */
-	public function setContents($contents)
+	public function setContent($content)
 	{
-	    $this->contents = (string) $contents;
+	    $this->content = (string) $content;
 
 	    return $this;
 	}
