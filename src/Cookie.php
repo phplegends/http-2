@@ -4,28 +4,65 @@ namespace PHPLegends\Http;
 
 class Cookie
 {
-
+    /**
+     * 
+     * @var string
+     * */
     protected $name;
 
+    /**
+     * 
+     * @var string
+     * */
     protected $value;
 
+    /**
+     * 
+     * @var int
+     * */
     protected $expires;
 
+    /**
+     * 
+     * @var string|null
+    */
     protected $path;
 
+    /**
+     * 
+     * @var string
+     * */
     protected $domain;
 
+    /**
+     * 
+     * @var boolean
+     * */
     protected $secure;
+
+    /**
+     * 
+     * @var boolean
+     * */
 
     protected $httpOnly;
 
     /**
      * 
-     * 
-     * 
+     * @param string $name
+     * @param string $value
+     * @param \DateTime|string|integer
+     * @param null|string $path
+     * @param null|string $domain
+     * @param boolean $secure
+     * @param boolean $httpOnly
      * 
      * */
-    public function __construct($name, $value, $expires = 0, $path = null, $domain = null, $secure = false, $httpOnly = false)
+    public function __construct(
+        $name, $value, $expires = 0,
+        $path = null, $domain = null,
+        $secure = false, $httpOnly = false
+    )
     {
         $this->setName($name);
 
@@ -165,7 +202,7 @@ class Cookie
     /**
      * Gets the value of secure.
      *
-     * @return mixed
+     * @return boolean
      */
     public function getSecure()
     {
@@ -175,7 +212,7 @@ class Cookie
     /**
      * Sets the value of secure.
      *
-     * @param mixed $secure the secure
+     * @param boolean $secure the secure
      *
      * @return self
      */
@@ -199,7 +236,7 @@ class Cookie
     /**
      * Sets the value of httpOnly.
      *
-     * @param mixed $httpOnly the http only
+     * @param boolean $httpOnly the http only
      *
      * @return self
      */
@@ -233,10 +270,43 @@ class Cookie
 
         } else {
 
-            throw new \UnexpectedValueException('Unable to process expire value');
+            throw new \UnexpectedValueException(
+                sprintf(
+                    'Expected DateTime, Integer or String, %s given',
+                    gettype($expires)
+                )
+            );
         }
 
         return $this->setExpires($expires);
 
+    }
+
+    /**
+     * 
+     * @param string $name
+     * @param string $value
+     * @param array $args
+     * */
+    public static function create($name, $value, array $args = [])
+    {
+
+        $args += [
+          'expires'   => 0,
+          'path'      => NULL,
+          'domain'    => NULL,
+          'secure'    => false,
+          'httpOnly' => false,
+        ];
+
+        return new static(
+            $name,
+            $value,
+            $args['expires'],
+            $args['path'],
+            $args['domain'],
+            $args['secure'],
+            $args['httpOnly']
+        );
     }
 }
