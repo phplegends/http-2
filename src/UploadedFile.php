@@ -16,7 +16,7 @@ class UploadedFile
     /**
     * @var string
     */
-    protected $file;
+    protected $filename;
 
     /**
     * @var int
@@ -70,9 +70,9 @@ class UploadedFile
      * @param string $type
      * 
      * */
-    public function __construct($file, $clientFilename, $size, $error, $type)
+    public function __construct($filename, $clientFilename, $size, $error, $type)
     {
-        $this->file = $file;
+        $this->filename = $filename;
 
         $this->size = $size;
 
@@ -88,9 +88,9 @@ class UploadedFile
      *
      * @return string
      */
-    public function getFile()
+    public function getFilename()
     {
-        return $this->assertNotMoved()->file;
+        return $this->assertNotMoved()->filename;
     }
 
     /**
