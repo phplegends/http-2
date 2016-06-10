@@ -16,26 +16,10 @@ class CookieJar extends Collection
      *
      * @param string $name
      * @param string $value
-     * @param \DateTime|string|integer
-     * @param null|string $path
-     * @param null|string $domain
-     * @param boolean $secure
-     * @param boolean $httpOnly
+     * @param array $args
      * */
-    public function setCookie(
-        $name, $value, $expires = 0, 
-        $path = null, $domain = null, 
-        $secure = false, $httpOnly = false
-    ) {
-
-        $args = compact(
-            'domain',
-            'expires',
-            'httpOnly',
-            'path',
-            'secure'
-        );
-
+    public function setCookie($name, $value, array $args = [])
+    {
         return parent::set($name, Cookie::create($name, $value, $args));
     }
 
