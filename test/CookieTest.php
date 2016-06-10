@@ -41,7 +41,7 @@ class CookieTest extends PHPUnit_Framework_TestCase
         $expire = strtotime('+1 days');
 
         $this->cookies->setCookie(
-            'session_id', 'BlaBlaBla', '+1 days', '/test'
+            'session_id', 'BlaBlaBla', ['expires' => '+1 days', 'path' => '/test']
         );
 
         $cookie = $this->cookies['session_id'];
