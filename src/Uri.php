@@ -25,7 +25,6 @@ class Uri
 
     /**
      * 
-     * 
      * @param string $uri
     */
 	public function __construct($uri = '')
