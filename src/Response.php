@@ -13,7 +13,7 @@ use Psr\Http\Message\StreamInterface;
  * */
 class Response extends Message
 {
-	
+
     /**
      * 
      * @var array
@@ -89,7 +89,6 @@ class Response extends Message
 	 * */
 	protected $statusCode = 200;
 
-
 	public function __construct($content, $code = 200, $headers = [])
 	{
         $this->setStatusCode($code);
@@ -162,24 +161,60 @@ class Response extends Message
         return $this;
     }
 
-
     public function send()
     {
         $this->sendHeaders();
 
-        echo $this->getBody();
+        $this->sendCookies();
+
+        echo $this->getContent();
     }
 
     public function sendHeaders()
     {
-        if (header_sent()) return false;
+        if (headers_sent()) return false;
 
-        foreach ($this->getHeader()->getLineList() as $line) {
+        foreach ($this->getHeaders()->getFormated() as $line) {
 
             header($line, true);
-
         }
 
         return true;
+    }
+
+    public function sendCookies()
+    {
+        if (headers_sent()) return false;
+
+        foreach ($this->getHeaders()->getCookies() as $cookie) {
+
+            setcookie(
+                $cookie->getName(),
+                $cookie->getValue(),
+                $cookie->getExpires(),
+                $cookie->getPath(), 
+                $cookie->getDomain(),
+                $cookie->getSecure(),
+                $cookie->getHttpOnly()
+            );
+        }
+
+    }
+
+    public function setCookies(CookieJar $cookies)
+    {
+        $this->getHeaders()->setCookies($cookies);
+
+        return $this;
+    }
+
+    public function getCookies()
+    {
+        return $this->getHeaders()->getCookies();
+    }
+
+    public function setCookie($name, $value, array $args = [])
+    {
+        return $this->getHeaders()->getCookies()->setCookie($name, $value, $args);
     }
 }
