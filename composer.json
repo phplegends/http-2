@@ -11,8 +11,6 @@
     ],
     "minimum-stability": "stable",
     "require": {
-
-        "psr/http-message" : "1.0",
         "phplegends/collections": "1.*"
     },
 
