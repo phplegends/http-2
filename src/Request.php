@@ -31,16 +31,36 @@ class Request extends Message
     /**
      * Server variable
      * 
-     * @var
+     * @var ParameterCollection
      * */
 	protected $server;
-
+    
+    /**
+     * Cookies
+     * 
+     * @var ParameterCollection
+     * */
 	protected $cookies;
 
+    /**
+     * Query String variable
+     * 
+     * @var ParameterCollection
+     * */
 	protected $query;
 
+    /**
+     * Post attributes variable
+     * 
+     * @var ParameterCollection
+     * */
     protected $body;
     
+    /**
+     * Uploaded files variable
+     * 
+     * @var ParameterCollection
+     * */
     protected $uploadedFiles;
 
     public function __construct($method, $uri, ParameterCollection $server) {
