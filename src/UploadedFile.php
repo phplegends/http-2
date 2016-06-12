@@ -48,7 +48,7 @@ class UploadedFile
      * List of Message errors
      * @var array
      * */
-    protected $errorMessages = [
+    protected static $errorMessages = [
         //UPLOAD_ERR_OK       => 'There is no error, the file uploaded with success',
         UPLOAD_ERR_INI_SIZE   => 'The uploaded file exceeds the upload_max_filesize directive in php.ini',
         UPLOAD_ERR_FORM_SIZE  => 'The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form',
@@ -72,7 +72,7 @@ class UploadedFile
     {
         $this->filename = $filename;
 
-        $this->size = $size;
+        $this->size = (int) $size;
 
         $this->error = $error;
 
@@ -138,7 +138,7 @@ class UploadedFile
      * */
     public function getFileObject()
     {
-        return new \SplFileObject($this->assertNotMoved()->getFile(), 'r');
+        return new \SplFileObject($this->assertNotMoved()->getFilename(), 'r');
     }
 
 
@@ -148,7 +148,7 @@ class UploadedFile
              ->assertOk()
              ->assertNotEmptyString($targetPath);
 
-        $isUploaded = move_uploaded_file($this->getFile(), $targetPath);
+        $isUploaded = move_uploaded_file($this->getFilename(), $targetPath);
 
         if (! $isUploaded) {
 
@@ -159,7 +159,7 @@ class UploadedFile
     }
 
     /**
-     * Move file from directory, keeping the cliente file name
+     * Move file from directory, keeping the client file name
      * 
      * @param string $directory
      * */
@@ -187,9 +187,9 @@ class UploadedFile
      * @return self
      * */
 
-    public function assertNotMoved()
+    protected function assertNotMoved()
     {
-        if ($this->moved) {
+        if ($this->isMoved()) {
             throw new \RunTimeException('The current uploaded file already been moved');
         }
 
@@ -203,7 +203,7 @@ class UploadedFile
      * @return self
      * */
 
-    public function assertOk()
+    protected function assertOk()
     {
         if (! $this->isValid()) {
             throw new \RunTimeException($this->getErrorMessage());
@@ -221,7 +221,9 @@ class UploadedFile
     protected function assertNotEmptyString($string)
     {
         if (empty($string)) {
+
             throw new \InvalidArgumentException('String must not be empty');
+
         }
 
         return $this;
@@ -234,11 +236,41 @@ class UploadedFile
      */
     public function getErrorMessage()
     {
-        if (array_key_exists($this->error, $this->errorMessages)) {
+        if (array_key_exists($this->error, static::$errorMessages)) {
 
-            return $this->errorMessages[$this->error];
+            return static::$errorMessages[$this->error];
         }
 
         return 'Unknow upload error';
+    }
+
+    /**
+     * 
+     * @return boolean
+     * */
+    public function isMoved()
+    {
+        return $this->moved;
+    }
+
+    public static function createFromArray(array $value)
+    {
+        if (! static::isValidKeys($value))
+        {
+            throw new \UnexpectedValueException('Invalid upload data');
+        }
+
+        return new static(
+            $value['tmp_name'], 
+            $value['name'], 
+            $value['size'],
+            $value['error'],
+            $value['type']
+        );
+    }
+
+    public static function isValidKeys(array $file)
+    {
+        return isset($file['error'], $file['name'], $file['size'], $file['tmp_name'], $file['type']);
     }
 }
