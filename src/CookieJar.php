@@ -65,4 +65,13 @@ class CookieJar extends Collection
         return $this;
     }
 
+    public function delete($key)
+    {
+        if (! $this->has($key)) return null;
+
+        $this->get($key)->invalidate();
+
+        return parent::delete($key);
+    }
+
 }
