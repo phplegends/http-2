@@ -2,6 +2,12 @@
 
 namespace PHPLegends\Http;
 
+/**
+ * Represents the cookie 
+ * 
+ * 
+ * @author Wallace de Souza Vizerra <wallacemaxters@gmail.com>
+ * */
 class Cookie
 {
     /**

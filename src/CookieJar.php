@@ -5,9 +5,9 @@ namespace PHPLegends\Http;
 use PHPLegends\Collections\Collection;
 
 /**
+ * Representes a cookie collection
  * 
  * @author Wallace de Souza Vizerra <wallacemaxters@gmail.com>
- * 
  * */
 class CookieJar extends Collection
 {   

@@ -2,9 +2,18 @@
 
 namespace PHPLegends\Http;
 
-
+/**
+ * Represents "all" uploaded files in request
+ * 
+ * @author Wallace de Souza Vizerra <wallacemaxters@gmail.com>
+ * 
+ * */
 class FilesCollection extends ParameterCollection
 {
+    /**
+     * 
+     * @var array
+     * */
     protected static $keys = [
         'error',
         'name',
@@ -13,16 +22,16 @@ class FilesCollection extends ParameterCollection
         'type',
     ];
 
-    public function add($item) 
+    /**
+     * 
+     * @param UploadedFile $uploadedFile
+     * 
+     * */
+    public function add($uploadedFile) 
     {  
-        $this->assertType($item);
+        $this->assertType($uploadedFile);
 
-        return parent::add($item);
-    }
-
-    public function set($key, $value)
-    {
-        return parent::set($key, $value);
+        return parent::add($uploadedFile);
     }
 
     /**

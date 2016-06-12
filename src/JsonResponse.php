@@ -2,6 +2,11 @@
 
 namespace PHPLegends\Http;
 
+/**
+ * Represents the json response
+ * 
+ * @author Wallace de Souza Vizerra
+ * */
 class JsonResponse extends Response
 {   
     
@@ -19,4 +24,16 @@ class JsonResponse extends Response
 		
 		$this->getHeaders()->set('Content-Type', 'application/json');
 	}
+
+    /**
+     * Overwrites the 'SetContent' 
+     * 
+     * @uses json_encode
+     * @param mixed $content
+     * @return self
+     * */
+    public function setContent($content)
+    {
+        return parent::setContent(json_encode($content));
+    }
 }

@@ -3,6 +3,9 @@
 namespace PHPLegends\Http;
 
 /**
+ * 
+ * Represents URI
+ * 
  * @author Wallace de Souza Vizerra <wallacemaxters@gmail.com>
  * */
 

@@ -5,6 +5,7 @@ namespace PHPLegends\Http;
 use PHPLegends\Collections\Collection;
 
 /**
+ * Represents a collection for Parameter
  * 
  * @author Wallace de Souza Vizerra <wallacemaxters@gmail.com>
  * */

@@ -8,6 +8,8 @@ use Psr\Http\Message\StreamInterface;
 
 /**
  * 
+ * Represents a Server Request.
+ * 
  * @author Wallace de Souza Vizerra <wallacemaxters@gmail.com>
  * 
  * */

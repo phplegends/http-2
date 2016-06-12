@@ -3,9 +3,10 @@
 namespace PHPLegends\Http;
 
 /**
+ * Abstract class with common methods for Request and Response
+ * 
  * @author Wallace de Souza Vizerra <wallacemaxters@gmail.com>
  * */
-
 abstract class Message
 {
 
