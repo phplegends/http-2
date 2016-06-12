@@ -34,4 +34,6 @@ class ResponseTest extends PHPUnit_Framework_TestCase
             $this->response->getStatusCode()
         );
     }
+
+    
 }

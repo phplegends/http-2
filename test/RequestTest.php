@@ -1,9 +1,9 @@
 <?php
 
-use PHPLegends\Http\ServerRequest;
+use PHPLegends\Http\Request;
 use PHPLegends\Http\ParameterCollection;
 
-class ServerRequestTest extends PHPUnit_Framework_TestCase
+class RequestTest extends PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
@@ -12,7 +12,7 @@ class ServerRequestTest extends PHPUnit_Framework_TestCase
             'HTTP_PORT' => 80,
         ]);
 
-        $this->request = new ServerRequest(
+        $this->request = new Request(
             'GET', 'http://localhost/test?id=9090', $server
         );
 
@@ -78,11 +78,29 @@ class ServerRequestTest extends PHPUnit_Framework_TestCase
 
     public function testGetRawBody()
     {
-        $this->assertNull($this->request->getRawBody());
+        $this->assertNull($this->request->getContent());
 
-        $this->request->setRawBody('{"id":1}');
+        $this->request->setContent('{"id":1}');
 
-        $this->assertEquals('{"id":1}', $this->request->getRawBody());
+        $this->assertEquals('{"id":1}', $this->request->getContent());
+
+        $data = $this->request->getJsonContent();
+
+        $this->assertEquals(['id' => 1], $data);
+    }
+
+    public function testGetContentException()
+    {
+        $this->request->setContent('{invalid_json...');
+
+        try{
+
+            $this->request->getJsonContent();
+
+        } catch (\Exception $e) {
+
+            $this->assertInstanceOf('\RunTimeException', $e);
+        }
     }
 
     public function testCreateFromGlobalsAndUploaded()
@@ -103,14 +121,21 @@ class ServerRequestTest extends PHPUnit_Framework_TestCase
                     'size'     => 99, 
                     'type'     => 'text/plain'
                 ]
+            ],
+
+            'parte_chata' => [
+                'tmp_name' => [
+                    tempnam(null, '_test_phpunit_'),
+                    tempnam(null, '_test_phpunit_')
+                ],
+                'error' => [UPLOAD_ERR_OK, UPLOAD_ERR_OK],
+                'name'  => ['x.txt', 'y.txt'],
+                'size'  => [40, 50],
+                'type'  => ['text/plain', 'application/pdf']
             ]
         ];
 
-        $r = ServerRequest::createFromGlobals();
-
-        $this->assertParamCollection($r->getUploadedFiles());
-
-        $this->assertCount(2, $r->getUploadedFiles());
+        $r = Request::createFromGlobals();
 
         $this->assertEquals(
             'file.txt',
