@@ -2,9 +2,6 @@
 
 namespace PHPLegends\Http;
 
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\StreamInterface;
-
 /**
  * Represents the HTTP Response
  * 
