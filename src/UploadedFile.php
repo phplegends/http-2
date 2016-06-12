@@ -253,6 +253,12 @@ class UploadedFile
         return $this->moved;
     }
 
+    /**
+     * Create a UploadedFile from PHP $_FILES array
+     * 
+     * @param array $value
+     * @return self
+     * */
     public static function createFromArray(array $value)
     {
         if (! static::isValidKeys($value))
@@ -269,6 +275,11 @@ class UploadedFile
         );
     }
 
+    /**
+     * Check if PHP upload keys is valid
+     * @param array $file
+     * @return boolean
+     * */
     public static function isValidKeys(array $file)
     {
         return isset($file['error'], $file['name'], $file['size'], $file['tmp_name'], $file['type']);
