@@ -282,6 +282,11 @@ class Cookie
 
     }
 
+    public function invalidate()
+    {
+        return $this->resolveExpiresValue('-1000 days');
+    }
+
     /**
      * 
      * @param string $name
