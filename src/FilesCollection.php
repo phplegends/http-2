@@ -40,9 +40,9 @@ class FilesCollection extends ParameterCollection
      * @param array $uploadedFiles
      * @return FilesCollection
      * */
-    public static function createFromArray(array $uploadedFiles)
+    protected static function normalizePHPArray(array $uploadedFiles)
     {
-        $files = new static;
+        $files = [];
 
         foreach ($uploadedFiles as $key => $value) {
 
@@ -52,7 +52,7 @@ class FilesCollection extends ParameterCollection
 
             } elseif (is_array($value) && UploadedFile::isValidKeys($value) && is_array($value['tmp_name'])) {
 
-                $files[$key] = static::createFromArray(
+                $files[$key] = static::normalizePHPArray(
                     static::resolveIrregularData($value)
                 );
                 
@@ -62,7 +62,7 @@ class FilesCollection extends ParameterCollection
                 
             } elseif (is_array($value)) {
                 
-                $files[$key]  = static::createFromArray($value);
+                $files[$key]  = static::normalizePHPArray($value);
 
             } else {
 
@@ -71,6 +71,11 @@ class FilesCollection extends ParameterCollection
         }
 
         return $files;
+    }
+
+    public static function createFromArray(array $uploadedFiles)
+    {
+        return new static(static::normalizePHPArray($uploadedFiles));
     }
 
     /**
