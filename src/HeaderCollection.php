@@ -10,13 +10,6 @@ namespace PHPLegends\Http;
 
 class HeaderCollection extends ParameterCollection
 {	
-
-	/**
-	 * 
-	 * @var CookieJar
-	 * */
-	protected $cookie;
-
 	/**
 	 * Sets an value for header
 	 * 
@@ -100,21 +93,4 @@ class HeaderCollection extends ParameterCollection
 
 		return $items;
 	}
-
-	public function setCookies(CookieJar $cookie)
-	{
-		$this->cookie = $cookie;
-
-		return $this;
-	}
-
-	/**
-	 * 
-	 * @return CookieJar
-	 * */
-	public function getCookies()
-	{
-		return $this->cookie ?: $this->cookie = new CookieJar;
-	}
-
 }
