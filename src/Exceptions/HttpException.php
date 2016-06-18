@@ -2,25 +2,34 @@
 
 namespace PHPLegends\Http\Exceptions;
 
-class HttpException extends \RuntimeException
+use PHPLegends\Http\Response;
+
+/**
+ * 
+ * Represents a http exception
+ * 
+ * @author Wallace de Souza Vizerra <wallacemaxters@gmail.com>
+ * 
+ * */
+
+class HttpException extends \RunTimeException implements HttpExceptionInterface
 {
-    protected $statusCode;
+	protected $response;
 
-    public function __construct($message, $statusCode = 500)
-    {
-        parent::__construct($message);
+	public function __construct($message, $statusCode = 500)
+	{		
+		parent::__construct($message);
 
-        $this->statusCode = $statusCode;
-    }
+		$this->response = new Response($this->getMessage(), $statusCode);
+	}
 
-    /**
-     * Gets the value of statusCode.
-     *
-     * @return int
-     */
-    public function getStatusCode()
-    {
-        return $this->statusCode;
-    }
+	/**
+	 * Get response of exception
+	 * 
+	 * @return \PHPLegends\Http\Response
+	 * */
+	public function getResponse()
+	{
+		return $this->response;
+	}
 }
-
