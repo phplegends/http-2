@@ -189,7 +189,7 @@ class Uri
             throw new \InvalidArgumentException('Invalid host');
         }
 
-        $this->host = $host;
+        $this->components['host'] = $host;
 
         return $this;
     }
