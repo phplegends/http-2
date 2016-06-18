@@ -25,7 +25,7 @@ class ResponseHeaderCollection extends HeaderCollection
      */
     public function getCookies()
     {
-        return $this->cookies;
+        return $this->cookies ?: $this->cookies = new CookieJar;
     }
 
     /**
