@@ -105,7 +105,7 @@ class Request extends Message
             $protocol = str_replace('HTTP/', '', $_SERVER['SERVER_PORT']);
         }
 
-        $uri = static::createUriFromGlobals();
+        $uri = Uri::createFromGlobals();
 
         $request = new self($method, $uri, $headers);
 
@@ -117,44 +117,7 @@ class Request extends Message
                 ->setContent($content);
 
         return $request;
-    }
-
-    public static function createUriFromGlobals()
-    {
-
-        $uri = new Uri();
-
-        if (isset($_SERVER['HTTPS'])) {
-
-            $uri->setScheme($_SERVER['HTTPS'] == 'on' ? 'https' : 'http');
-        }
-
-        if (isset($_SERVER['HTTP_HOST'])) {
-
-            $uri->setHost($_SERVER['HTTP_HOST']);
-
-        } elseif (isset($_SERVER['SERVER_NAME'])) {
-
-            $uri->setHost($_SERVER['SERVER_NAME']);
-        }
-
-        if (isset($_SERVER['SERVER_PORT'])) {
-
-            $uri->setPort($_SERVER['SERVER_PORT']);
-        }
-
-        if (isset($_SERVER['REQUEST_URI'])) {
-
-            $uri->setPath(strtok($_SERVER['REQUEST_URI'], '?'));
-        }
-
-        if (isset($_SERVER['QUERY_STRING'])) {
-
-            $uri->setQueryString($_SERVER['QUERY_STRING']);
-        }
-        
-        return $uri;
-    }
+    }    
 
     public function isSecure()
     {
