@@ -237,7 +237,6 @@ class Response extends Message
         return $this->headers;
     }
 
-
     /**
      * Resolve value for ResponseHeaderCollection creation
      * 

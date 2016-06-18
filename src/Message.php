@@ -67,6 +67,5 @@ abstract class Message
 	    $this->content = (string) $content;
 
 	    return $this;
-	}
-	
+	}	
 }
