@@ -12,9 +12,13 @@ class RequestTest extends PHPUnit_Framework_TestCase
             'HTTP_PORT' => 80,
         ]);
 
-        $this->request = new Request(
-            'GET', 'http://localhost/test?id=9090', $server
-        );
+        $this->request = new Request('GET', 'http://localhost/test?id=9090', [
+            'Content-Length' => 0,
+            'X-PHPUnit-Test' => 'Ok'
+        ]);
+
+
+        $this->request->setServer($server);
 
         $this->request->setBody(new ParameterCollection([
             'name' => 'Wallace',
@@ -159,6 +163,18 @@ class RequestTest extends PHPUnit_Framework_TestCase
         return $this->assertInstanceOf(
             'PHPLegends\Http\ParameterCollection', $value
         );
+    }
+
+
+    public function testGetHeaders()
+    {
+        $this->assertInstanceOf('PHPLegends\Http\HeaderCollection', $this->request->getHeaders());
+
+        $this->assertCount(2, $this->request->getHeaders());
+
+        $this->assertTrue($this->request->getHeaders()->has('content-length'));
+
+        $this->assertEquals('Ok', $this->request->getHeaders()->getLine('x-phpunit-test'));
     }
 
 }

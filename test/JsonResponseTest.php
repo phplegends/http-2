@@ -1,4 +1,4 @@
-<?php
+    <?php
 
 use PHPLegends\Http\JsonResponse;
 
