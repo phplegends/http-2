@@ -226,9 +226,9 @@ class Uri
      * @param array $queryParams
      * @return self
      * */
-    public function setQueryArray(array $query)
+    public function setQueryArray(array $queryArray)
     {
-        $query = http_build_query($queryParams);
+        $query = http_build_query($queryArray);
 
         return $this->setQueryString($query);
     }
@@ -305,11 +305,11 @@ class Uri
         }
 
         if ($c['path']) {
-            $uri .= '/' . $c['path'];
+            $uri .= '/' . ltrim($c['path'], '/');
         }
 
         if ($c['query']) {
-            $uri .= '?' . $c['scheme'];
+            $uri .= '?' . $c['query'];
         }
 
         if ($c['fragment']) {
