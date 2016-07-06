@@ -16,6 +16,8 @@ class ResponseTest extends PHPUnit_Framework_TestCase
     {
         $this->assertEquals('Hello, world!', $this->response->getContent());
 
+        $this->assertInstanceOf('PHPLegends\Http\ResponseHeaderCollection', $this->response->getHeaders());
+
     }
 
     public function testHeaderGet()
@@ -23,6 +25,11 @@ class ResponseTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(
             ['Yep'], 
             $this->response->getHeaders()->get('X-ResponseTest')
+        );
+
+        $this->assertEquals(
+            'Yep', 
+            $this->response->getHeaders()->getLine('X-ResponseTest')
         );
     }
 

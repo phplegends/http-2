@@ -4,15 +4,15 @@ namespace PHPLegends\Http;
 
 /**
  * Represents the HTTP Response
- * 
+ *
  * @author Wallace de Souza Vizerra <wallacemaxters@gmail.com>
- * 
+ *
  * */
 class Response extends Message
 {
 
     /**
-     * 
+     *
      * @var array
     */
     protected $phrases = [
@@ -75,22 +75,32 @@ class Response extends Message
         508 => 'Loop Detected',
         511 => 'Network Authentication Required',
     ];
+
 	/**
-	 * 
+	 *
 	 * @var string
 	 * */
-	protected $reasonPhrase = null;
+	protected $reasonPhrase;
 
 	/**
 	 * @var int
 	 * */
 	protected $statusCode = 200;
 
+    /**
+     *
+     * @var ResponseHeaderCollection
+     * */
+
+    protected $headers;
+
 	public function __construct($content, $code = 200, $headers = [])
 	{
         $this->setStatusCode($code);
-                
-        parent::__construct($content, $headers);
+
+        $this->setContent($content);
+
+        $this->resolveHeaderValue($headers);
 
         if (! $this->getHeaders()->has('Content-Type')) {
 
@@ -189,7 +199,7 @@ class Response extends Message
                 $cookie->getName(),
                 $cookie->getValue(),
                 $cookie->getExpires(),
-                $cookie->getPath(), 
+                $cookie->getPath(),
                 $cookie->getDomain(),
                 $cookie->getSecure(),
                 $cookie->getHttpOnly()
@@ -213,5 +223,44 @@ class Response extends Message
     public function setCookie($name, $value, array $args = [])
     {
         return $this->getHeaders()->getCookies()->setCookie($name, $value, $args);
+    }
+
+    public function setHeaders(ResponseHeaderCollection $headers)
+    {
+        $this->headers = $headers;
+
+        return $this;
+    }
+
+    public function getHeaders()
+    {
+        return $this->headers;
+    }
+
+    /**
+     * Resolve value for ResponseHeaderCollection creation
+     *
+     * @param null|array|\PHPLegends\Http\Header $header
+     * @return self
+     * @throws \InvalidArgumentException
+     * */
+    protected function resolveHeaderValue($headers)
+    {
+
+        if ($headers === null) {
+
+            $headers = new ResponseHeaderCollection;
+
+        } elseif (is_array($headers)) {
+
+            $headers = new ResponseHeaderCollection($headers);
+
+        } elseif (! $headers instanceof ResponseHeaderCollection) {
+
+            throw new \InvalidArgumentException('Header is not array or Header object');
+
+        }
+
+        return $this->setHeaders($headers);
     }
 }

@@ -12,11 +12,11 @@ class RedirectResponse extends Response
 {
 	public function __construct($location, $code = 302, $headers = [])
 	{
-		$headers = ['Location' => (string) $location] + $headers;
-
 		$this->setStatusCode($code);
 
 		$this->resolveHeaderValue($headers);
+
+		$this->getHeaders()->set('Location', $location);
 	}
 
 	/**
@@ -40,6 +40,7 @@ class RedirectResponse extends Response
 		}
 
 		$this->sendHeaders();
+
 		$this->sendCookies();
 	}
 

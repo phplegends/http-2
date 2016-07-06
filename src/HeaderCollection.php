@@ -3,23 +3,16 @@
 namespace PHPLegends\Http;
 
 /**
- * 
+ *
  * @author Wallace de Souza Vizerra <wallacemaxters@gmail.com>
  * @package PHPLegends\Http
  * */
 
 class HeaderCollection extends ParameterCollection
-{	
-
-	/**
-	 * 
-	 * @var CookieJar
-	 * */
-	protected $cookie;
-
+{
 	/**
 	 * Sets an value for header
-	 * 
+	 *
 	 * @param string $name
 	 * @param string|array $value
 	 * @return self
@@ -30,7 +23,7 @@ class HeaderCollection extends ParameterCollection
 	}
 
 	/**
-	 * 
+	 *
 	 * @param array $items
 	 * @return self
 	 * */
@@ -39,7 +32,7 @@ class HeaderCollection extends ParameterCollection
 		foreach ($items as $name => $value) {
 
 			$this->set($name, $value);
-			
+
 		}
 
 		return $this;
@@ -48,7 +41,7 @@ class HeaderCollection extends ParameterCollection
 	public function get($name, $default = [])
 	{
 		$name = $this->normalizeName($name);
-		
+
 		return array_replace([$name => $default], $this->all())[$name];
 	}
 
@@ -59,7 +52,7 @@ class HeaderCollection extends ParameterCollection
 
 	/**
 	 * Normalize the header name
-	 * 
+	 *
 	 * @param string $name
 	 * @return string
 	 * */
@@ -70,7 +63,7 @@ class HeaderCollection extends ParameterCollection
 
 	/**
 	 * Get the line for header item name.
-	 * 
+	 *
 	 * @param string $name
 	 * @return string|null
 	 * */
@@ -85,11 +78,11 @@ class HeaderCollection extends ParameterCollection
 	}
 
 	/**
-	 * 
-	 * Get all line of headers formated
+	 *
+	 * Get all line of headers formatted
 	 * @return array
 	 * */
-	public function getFormated()
+	public function getFormatted()
 	{
 		$items = [];
 
@@ -100,21 +93,4 @@ class HeaderCollection extends ParameterCollection
 
 		return $items;
 	}
-
-	public function setCookies(CookieJar $cookie)
-	{
-		$this->cookie = $cookie;
-
-		return $this;
-	}
-
-	/**
-	 * 
-	 * @return CookieJar
-	 * */
-	public function getCookies()
-	{
-		return $this->cookie ?: $this->cookie = new CookieJar;
-	}
-
 }

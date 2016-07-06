@@ -65,11 +65,13 @@ class Request extends Message
      * */
     protected $uploadedFiles;
 
-    public function __construct($method, $uri, ParameterCollection $server) {
+    public function __construct ($method, $uri, $headers = null) {
 
-        $this->setMethod($method)
-              ->resolveUriValue($uri)
-              ->setServer($server);
+        $this->setMethod($method);
+
+        $this->resolveUriValue($uri);
+
+        $this->resolveHeaderValue($headers);
 
         if ($this->getUri()->getQueryString()) {
 
@@ -103,18 +105,16 @@ class Request extends Message
             $protocol = str_replace('HTTP/', '', $_SERVER['SERVER_PORT']);
         }
 
-        $uri = static::createUriFromGlobals();
+        $uri = Uri::createFromGlobals();
 
-        $request = new self(
-            $method, $uri, new ParameterCollection($_SERVER)
-        );
+        $request = new self($method, $uri, $headers);
 
-        $request
-            ->setQuery(new ParameterCollection($_GET))
-            ->setBody(new ParameterCollection($_POST))
-            ->setCookies(new ParameterCollection($_COOKIE))
-            ->setUploadedFiles(FilesCollection::createFromArray($_FILES))
-            ->setContent($content);
+        $request->setQuery(new ParameterCollection($_GET))
+                ->setBody(new ParameterCollection($_POST))
+                ->setCookies(new ParameterCollection($_COOKIE))
+                ->setUploadedFiles(FilesCollection::createFromArray($_FILES))
+                ->setServer(new ParameterCollection($_SERVER))
+                ->setContent($content);
 
         return $request;
     }
@@ -155,6 +155,7 @@ class Request extends Message
 
         return $uri;
     }
+
 
     public function isSecure()
     {
@@ -383,5 +384,45 @@ class Request extends Message
         }
 
         return $this->setUri($uri);
+    }
+
+    public function setHeaders(HeaderCollection $headers)
+    {
+        $this->headers = $headers;
+
+        return $this;
+    }
+
+    public function getHeaders()
+    {
+        return $this->headers;
+    }
+
+
+    /**
+     * Resolve value for ResponseHeaderCollection creation
+     *
+     * @param null|array|\PHPLegends\Http\Header $header
+     * @return self
+     * @throws \InvalidArgumentException
+     * */
+    protected function resolveHeaderValue($headers)
+    {
+
+        if ($headers === null) {
+
+            $headers = new HeaderCollection;
+
+        } elseif (is_array($headers)) {
+
+            $headers = new HeaderCollection($headers);
+
+        } elseif (! $headers instanceof HeaderCollection) {
+
+            throw new \InvalidArgumentException('Header is not array or Header object');
+
+        }
+
+        return $this->setHeaders($headers);
     }
 }
