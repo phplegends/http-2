@@ -6,16 +6,16 @@ use PHPLegends\Collections\Collection;
 
 /**
  * Represents a collection for Parameter
- * 
+ *
  * @author Wallace de Souza Vizerra <wallacemaxters@gmail.com>
  * */
 
-class ParameterCollection extends Collection 
-{   
+class ParameterCollection extends Collection
+{
     /**
-     * 
+     *
      * @param string $key
-     * @param string $default 
+     * @param string $default
      * @return string
      * */
     public function getAsString($key, $default = '')
@@ -30,8 +30,8 @@ class ParameterCollection extends Collection
     }
 
     /**
-     * 
-     * @param string 
+     *
+     * @param string
      * @param boolean $default
      * @return boolean
      * */
@@ -51,10 +51,10 @@ class ParameterCollection extends Collection
 
         if (is_array($value)) {
 
-            $this->throwExceptionForInvalidType($key, 'float');
+            $this->throwExceptionForInvalidType($key, 'int');
         }
 
-        return (float) $value;
+        return (int) $value;
     }
 
     public function getAsFloat($key, $default = 0)
@@ -69,11 +69,11 @@ class ParameterCollection extends Collection
         return (float) $value;
     }
 
-    protected function isEmptyOrNullString($key)
+    public function isEmptyOrNullString($key)
     {
-        $value = $this->get($key);
+        $value = $this->getOrDefault($key);
 
-        return null === $value || (string) $value === '';
+        return null === $value || is_string($value) && $value === '';
     }
 
     protected function throwExceptionForInvalidType($key, $typeExpected)
@@ -87,4 +87,4 @@ class ParameterCollection extends Collection
 
         throw new \UnexpectedValueException($message);
     }
-} 
+}
