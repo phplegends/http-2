@@ -7,60 +7,60 @@ use Psr\Http\Message\UriInterface;
 use Psr\Http\Message\StreamInterface;
 
 /**
- * 
+ *
  * Represents a Server Request.
- * 
+ *
  * @author Wallace de Souza Vizerra <wallacemaxters@gmail.com>
- * 
+ *
  * */
 class Request extends Message
 {
 
     /**
      * Uri instance
-     * 
+     *
      * @var Uri
      * */
     protected $uri;
 
     /**
      * Method of request
-     * 
+     *
      * @var string
      * */
     protected $method = 'GET';
 
     /**
      * Server variable
-     * 
+     *
      * @var ParameterCollection
      * */
 	protected $server;
-    
+
     /**
      * Cookies
-     * 
+     *
      * @var ParameterCollection
      * */
 	protected $cookies;
 
     /**
      * Query String variable
-     * 
+     *
      * @var ParameterCollection
      * */
 	protected $query;
 
     /**
      * Post attributes variable
-     * 
+     *
      * @var ParameterCollection
      * */
     protected $body;
-    
+
     /**
      * Uploaded files variable
-     * 
+     *
      * @var ParameterCollection
      * */
     protected $uploadedFiles;
@@ -152,7 +152,7 @@ class Request extends Message
 
             $uri->setQueryString($_SERVER['QUERY_STRING']);
         }
-        
+
         return $uri;
     }
 
@@ -189,7 +189,7 @@ class Request extends Message
      * Gets the value of cookies.
      *
      * @return mixed
-     s*/
+     */
     public function getCookies()
     {
         return $this->cookies ?: $this->cookies = new ParameterCollection;
@@ -290,11 +290,11 @@ class Request extends Message
 
             return $data;
         }
-        
+
         $message = 'Invalid Json data';
 
         // Essa função só existe a partir do php 5.5
-        
+
         if (function_exists('json_last_error_msg')) {
 
             $message = json_last_error_msg();
@@ -304,9 +304,14 @@ class Request extends Message
         throw new \RunTimeException("Json error: {$message}");
     }
 
+    public function isXhr()
+    {
+        return $this->getHeaders();
+    }
+
 
     /**
-     * 
+     *
      * @return string
      * */
     public function getMethod()
@@ -315,10 +320,10 @@ class Request extends Message
     }
 
     /**
-     * 
+     *
      * @param string $method
      * @return self
-     * 
+     *
      * */
     public function setMethod($method)
     {
@@ -328,8 +333,18 @@ class Request extends Message
     }
 
     /**
+     *
+     * @param string $method
+     * @return boolean
+     * */
+    public function isMethod($method)
+    {
+        return strtoupper($method) === $this->getMethod();
+    }
+
+    /**
      * Gets the Uri
-     * 
+     *
      * @return Uri
      * */
     public function getUri()
@@ -339,7 +354,7 @@ class Request extends Message
 
     /**
      * Sets the Uri
-     * 
+     *
      * @param Uri $uri
      * @return self
      * */
@@ -352,7 +367,7 @@ class Request extends Message
 
     /**
      * Resolves the value for Uri
-     * 
+     *
      * @param string|Uri $uri
      * @return self
      * */
