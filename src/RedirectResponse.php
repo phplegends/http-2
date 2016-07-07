@@ -32,7 +32,7 @@ class RedirectResponse extends Response
 	 * In redirector response, the method send cannot 'echos' output
 	 * @return void
 	 * */
-	public function send()
+	public function send($force = false)
 	{
 		if (headers_sent()) {
 

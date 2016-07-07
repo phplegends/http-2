@@ -15,7 +15,7 @@ class Response extends Message
      *
      * @var array
     */
-    protected $phrases = [
+    protected static $phrases = [
         100 => 'Continue',
         101 => 'Switching Protocols',
         102 => 'Processing',
@@ -117,9 +117,9 @@ class Response extends Message
     {
         $code = $this->getStatusCode();
 
-        if ($this->reasonPhrase === null && isset($this->phrases[$code]))
+        if ($this->reasonPhrase === null && isset(static::$phrases[$code]))
         {
-            return $this->phrases[$code];
+            return static::$phrases[$code];
         }
 
         return (string) $this->reasonPhrase;
@@ -153,7 +153,6 @@ class Response extends Message
      * Sets the value of statusCode.
      *
      * @param int $statusCode the status code
-     *
      * @return self
      */
     public function setStatusCode($statusCode)
@@ -168,30 +167,47 @@ class Response extends Message
         return $this;
     }
 
-    public function send()
+    /**
+     * Send
+     *
+     * @param boolean $force
+     * @return void
+     * */
+    public function send($force = false)
     {
-        $this->sendHeaders();
+        $this->sendHeaders($force);
 
-        $this->sendCookies();
+        $this->sendCookies($force);
 
         echo $this->getContent();
     }
 
-    public function sendHeaders()
+    /**
+     *
+     * @param boolean $force
+     * @return void
+     * */
+    public function sendHeaders($force = false)
     {
-        if (headers_sent()) return false;
+        if (headers_sent() && ! $force) return false;
 
         foreach ($this->getHeaders()->getFormatted() as $line) {
 
-            header($line, true);
+            @header($line, true);
         }
 
         return true;
     }
 
-    public function sendCookies()
+    /**
+     * Send the cookies
+     *
+     * @param boolean $force
+     * @return void
+     * */
+    public function sendCookies($force = false)
     {
-        if (headers_sent()) return false;
+        if (headers_sent() && ! $force) return false;
 
         foreach ($this->getHeaders()->getCookies() as $cookie) {
 
@@ -208,6 +224,11 @@ class Response extends Message
 
     }
 
+    /**
+     *
+     * @param \PHPLegends\Http\CookieJar $cookies
+     * @return self
+     * */
     public function setCookies(CookieJar $cookies)
     {
         $this->getHeaders()->setCookies($cookies);
@@ -215,16 +236,34 @@ class Response extends Message
         return $this;
     }
 
+    /**
+     *
+     * @return \PHPLegends\Http\CookieJar
+     * */
     public function getCookies()
     {
         return $this->getHeaders()->getCookies();
     }
 
+    /**
+     *
+     *
+     * @param string $name
+     * @param string $valu
+     * @param array $args
+     * @return \PHPLegends\Http\Cookie
+     * */
     public function setCookie($name, $value, array $args = [])
     {
         return $this->getHeaders()->getCookies()->setCookie($name, $value, $args);
     }
 
+    /**
+     *
+     *
+     * @param \PHPLegends\Http\ResponseHeaderCollection $headers
+     * @return self
+     * */
     public function setHeaders(ResponseHeaderCollection $headers)
     {
         $this->headers = $headers;
@@ -232,6 +271,10 @@ class Response extends Message
         return $this;
     }
 
+    /**
+     *
+     * @return \PHPLegends\Http\ResponseHeaderCollection
+     * */
     public function getHeaders()
     {
         return $this->headers;

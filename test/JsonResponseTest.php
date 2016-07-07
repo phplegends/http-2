@@ -1,4 +1,4 @@
-    <?php
+<?php
 
 use PHPLegends\Http\JsonResponse;
 
@@ -23,6 +23,4 @@ class JsonResponseTest extends PHPUnit_Framework_TestCase
     {
         $this->assertEquals('application/json', $this->json->getHeaders()->getLine('content-type'));
     }
-
-    
 }
