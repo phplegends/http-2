@@ -181,7 +181,7 @@ class Response extends Message
     {
         if (headers_sent()) return false;
 
-        foreach ($this->getHeaders()->getFormated() as $line) {
+        foreach ($this->getHeaders()->getFormatted() as $line) {
 
             header($line, true);
         }
