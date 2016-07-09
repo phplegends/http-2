@@ -77,15 +77,35 @@ class Uri
      * */
     public function getPort()
     {
-        return $this->components['port'];
+        return $this->components['port'] ?: $this->getDefaultPortByScheme();
+    }
+
+    /**
+     * 
+     * @return int | null
+     * */
+    public function getDefaultPortByScheme()
+    {
+        $scheme = $this->getScheme();
+
+        if ($scheme === 'https') {
+
+            return 443;
+
+        } elseif ($scheme === 'http') {
+
+            return 80;
+        }
+
     }
 
     /**
      * Get authority for url
      * 
+     * @param boolean $forceShowPort
      * @return string
      * */
-    public function getAuthority()
+    public function getAuthority($forceShowPort = false)
     {
         $authority = '';
 
@@ -93,12 +113,7 @@ class Uri
             $authority .= $userinfo . '@';
         }
 
-        $authority .= $this->getHost();
-
-        if ($port = $this->getPort())
-        {
-            $authority .= ':' . $port;
-        }
+        $authority .= $this->getHostWithPort($forceShowPort);
 
         return $authority;
     }
@@ -200,7 +215,10 @@ class Uri
      * */
     public function setUserInfo($user, $password = null)
     {
-        $this->components = ['user' => $user, 'pass' => $password] + $this->components;
+        $this->components = [
+            'user' => rawurlencode($user),
+            'pass' => rawurlencode($password)
+        ] + $this->components;
 
         return $this;
     }
@@ -320,6 +338,14 @@ class Uri
 
     }
 
+
+    public function getHostWithScheme($forceShowPort = false)
+    {
+        $scheme = $this->getScheme() ?: 'https';
+
+        return $scheme . '://' . $this->getHostWithPort($forceShowPort);
+    }
+
     /**
      * Normalize scheme 
      * 
@@ -331,6 +357,35 @@ class Uri
         return strtolower(rtrim($scheme, ':/'));
     }
 
+    /**
+     * 
+     * @param boolean $forceShowPort
+     * @return string
+     * */
+    public function getHostWithPort($forceShowPort = false)
+    {
+        if ($this->canOmitPort() && ! $forceShowPort) {
+
+            return $this->getHost();
+        }
+
+        return $this->getHost() . ':' . $this->getPort();
+    }
+
+    protected function canOmitPort()
+    {
+        $port =  $this->getPort();
+
+        $scheme = $this->getScheme();
+
+        return $port == 80 && $scheme == 'http' || $port == 443 && $scheme === 'https';
+    }
+
+    /**
+     * 
+     * 
+     * @return \PHPLegends\Http\Uri
+     * */
     public static function createFromGlobals()
     {
 
