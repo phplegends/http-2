@@ -187,7 +187,7 @@ class Uri
     {
         if (preg_match('/^\d+$/', $port) > 0 || is_null($port)) {
 
-            return $this->components['port'] = $port;
+            return $this->components['port'] = (int) $port;
         }
 
         throw new \InvalidArgumentException('Invalid port');
@@ -394,6 +394,10 @@ class Uri
         if (isset($_SERVER['HTTPS'])) {
 
             $uri->setScheme($_SERVER['HTTPS'] == 'on' ? 'https' : 'http');
+
+        } else {
+
+            $uri->setScheme('http');
         }
 
         if (isset($_SERVER['HTTP_HOST'])) {

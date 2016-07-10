@@ -123,7 +123,33 @@ class UriTest extends PHPUnit_Framework_TestCase
             'ftp://128.0.0.1:22/login?redirect=1',
             $uri->build()
         );
+    }
 
 
+    public function testCreateFromGlobals()
+    {
+        $_SERVER['HTTP_HOST'] = 'localhost:8000';
+
+        $_SERVER['SERVER_PORT'] = '8000';
+
+        $_SERVER['REQUEST_URI'] = '/user';
+
+        $_SERVER['QUERY_STRING'] = 'name=Wallace';
+
+        $uri = Uri::createFromGlobals();
+
+        $this->assertEquals('http', $uri->getScheme());
+
+        $this->assertEquals(8000, $uri->getPort());
+
+        $this->assertEquals('/user', $uri->getPath());
+
+        $this->assertEquals(['name' => 'Wallace'], $uri->getQueryAsArray());
+
+        $this->assertEquals('name=Wallace', $uri->getQueryString());
+
+        $this->assertEquals('localhost', $uri->getHost());
+
+        $this->assertEquals('localhost:8000', $uri->getHostWithPort());
     }
 }
