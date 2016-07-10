@@ -139,6 +139,10 @@ class RequestTest extends PHPUnit_Framework_TestCase
             ]
         ];
 
+        $_SERVER['HTTP_Accept_Language'] = "pt-BR,pt;q=0.8,en-US;q=0.6,en;q=0.4,ru;q=0.2";
+
+        $_SERVER['HTTP_Accept-Encoding'] = "gzip, deflate, sdch";
+
         $r = Request::createFromGlobals();
 
         $this->assertEquals(
@@ -155,6 +159,8 @@ class RequestTest extends PHPUnit_Framework_TestCase
             'test_multilevel_array.txt',
             $r->getUploadedFiles()->get('group')['subname']->getClientFilename()
         );
+
+        var_dump($r->getHeaders()->toArray());
 
     }
 
@@ -175,6 +181,17 @@ class RequestTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($this->request->getHeaders()->has('content-length'));
 
         $this->assertEquals('Ok', $this->request->getHeaders()->getLine('x-phpunit-test'));
+    }
+
+
+    public function testIsXhr()
+    {
+
+        $this->assertFalse($this->request->isXhr());
+
+        $this->request->getHeaders()->set('x-requested-with', 'xmlhttprequest');
+
+        $this->assertTrue($this->request->isXhr());
     }
 
 }

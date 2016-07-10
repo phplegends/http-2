@@ -93,7 +93,11 @@ class Request extends Message
             $method = $_SERVER['REQUEST_METHOD'];
         }
 
-        $headers = \PHPLegends\Http\get_all_headers();
+        $headers = array_map(function ($value) {
+            
+            return array_map('trim', explode(',', $value));
+
+        }, \PHPLegends\Http\get_all_headers());
 
         if (in_array($method, ['POST', 'PUT'])) {
 
@@ -307,9 +311,8 @@ class Request extends Message
 
     public function isXhr()
     {
-        return $this->getHeaders();
+        return strtolower($this->getHeaders()->getLine('x-requested-with')) == 'xmlhttprequest';
     }
-
 
     /**
      *
