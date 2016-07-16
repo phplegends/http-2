@@ -2,13 +2,15 @@
 
 namespace PHPLegends\Http;
 
+use PHPLegends\Collections\Collection;
+
 /**
  *
  * @author Wallace de Souza Vizerra <wallacemaxters@gmail.com>
  * @package PHPLegends\Http
  * */
 
-class HeaderCollection extends ParameterCollection
+class HeaderCollection extends Collection
 {
 	/**
 	 * Sets an value for header
@@ -29,6 +31,8 @@ class HeaderCollection extends ParameterCollection
 	 * */
 	public function setItems(array $items)
 	{
+		$this->clear();
+
 		foreach ($items as $name => $value) {
 
 			$this->set($name, $value);
@@ -38,11 +42,9 @@ class HeaderCollection extends ParameterCollection
 		return $this;
 	}
 
-	public function get($name, $default = [])
+	public function get($name)
 	{
-		$name = $this->normalizeName($name);
-
-		return array_replace([$name => $default], $this->all())[$name];
+		return parent::get($this->normalizeName($name));
 	}
 
 	public function has($name)
