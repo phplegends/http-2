@@ -2,13 +2,16 @@
 
 namespace PHPLegends\Http;
 
+use PHPLegends\Collections\RecursiveCollection;
+
+
 /**
  * Represents "all" uploaded files in request
  * 
  * @author Wallace de Souza Vizerra <wallacemaxters@gmail.com>
  * 
  * */
-class FilesCollection extends ParameterCollection
+class FilesCollection extends RecursiveCollection
 {
     /**
      * 
@@ -25,7 +28,7 @@ class FilesCollection extends ParameterCollection
     /**
      * 
      * @param UploadedFile $uploadedFile
-     * 
+     * @return self
      * */
     public function add($uploadedFile) 
     {  
@@ -35,7 +38,7 @@ class FilesCollection extends ParameterCollection
     }
 
     /**
-     * Create From Array
+     * 
      * 
      * @param array $uploadedFiles
      * @return FilesCollection
@@ -46,6 +49,7 @@ class FilesCollection extends ParameterCollection
 
         foreach ($uploadedFiles as $key => $value) {
 
+            
             if ($value instanceof UploadedFile) {
 
                 $files[$key] = $value;
@@ -118,7 +122,7 @@ class FilesCollection extends ParameterCollection
 
     public function getIterator()
     {
-        return new \RecursiveArrayIterator($this->all());
+        return new \RecursiveArrayIterator($this->toArray());
     }
 
 }
