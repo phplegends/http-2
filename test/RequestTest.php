@@ -160,8 +160,6 @@ class RequestTest extends PHPUnit_Framework_TestCase
             $r->getUploadedFiles()->get('group')['subname']->getClientFilename()
         );
 
-        var_dump($r->getHeaders()->toArray());
-
     }
 
     protected function assertParamCollection($value)
