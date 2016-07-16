@@ -47,4 +47,17 @@ class ResponseHeaderCollection extends HeaderCollection
 
         return $this;
     }
+
+    /**
+     * Easy way to create ContentDisposition header format
+     * 
+     * */
+    public function setContentDisposition($filename)
+    {
+        $this['Content-Disposition'] = sprintf(
+            'attachment; filename="%s"', addcslashes($filename, '"\\')
+        );
+
+        return $this;
+    }
 }
