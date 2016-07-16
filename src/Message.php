@@ -46,7 +46,7 @@ abstract class Message
 	}
 
 	/**
-	 * Gets the value of body.
+	 * Gets the value of content.
 	 *
 	 * @return string
 	 */
@@ -56,10 +56,9 @@ abstract class Message
 	}
 
 	/**
-	 * Sets the value of body.
+	 * Sets the value of content
 	 *
-	 * @param string $body the body
-	 *
+	 * @param string $content
 	 * @return self
 	 */
 	public function setContent($content)
