@@ -101,11 +101,6 @@ class Response extends Message
         $this->setContent($content);
 
         $this->resolveHeaderValue($headers);
-
-        if (! $this->getHeaders()->has('Content-Type')) {
-
-            $this->getHeaders()->set('Content-Type', 'text/html; charset=utf-8');
-        }
 	}
 
     /**
@@ -190,7 +185,6 @@ class Response extends Message
     public function sendHeaders($force = false)
     {
         if (headers_sent() && ! $force) return false;
-
 
         header(sprintf('HTTP/%s %s %s', 
             $this->getProtocolVersion(),
