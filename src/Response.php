@@ -191,6 +191,13 @@ class Response extends Message
     {
         if (headers_sent() && ! $force) return false;
 
+
+        header(sprintf('HTTP/%s %s %s', 
+            $this->getProtocolVersion(),
+            $this->getStatusCode(),
+            $this->getReasonPhrase()
+        ));
+
         foreach ($this->getHeaders()->getFormatted() as $line) {
 
             @header($line, true);
