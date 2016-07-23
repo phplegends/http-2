@@ -185,8 +185,8 @@ class Response extends Message
     public function sendHeaders($force = false)
     {
         if (headers_sent() && ! $force) return false;
-
-        header(sprintf('HTTP/%s %s %s', 
+        
+        @header(sprintf('HTTP/%s %s %s', 
             $this->getProtocolVersion(),
             $this->getStatusCode(),
             $this->getReasonPhrase()
@@ -212,7 +212,7 @@ class Response extends Message
 
         foreach ($this->getHeaders()->getCookies() as $cookie) {
 
-            setcookie(
+            @setcookie(
                 $cookie->getName(),
                 $cookie->getValue(),
                 $cookie->getExpires(),
