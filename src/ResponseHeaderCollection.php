@@ -21,7 +21,7 @@ class ResponseHeaderCollection extends HeaderCollection
     {
         parent::__construct($items);
 
-        $cookies && $this->setCookies($cookies);
+        $this->setCookies($cookies ?: new CookieJar);
     }
 
     /**
@@ -31,7 +31,7 @@ class ResponseHeaderCollection extends HeaderCollection
      */
     public function getCookies()
     {
-        return $this->cookies ?: $this->cookies = new CookieJar;
+        return $this->cookies;
     }
 
     /**
