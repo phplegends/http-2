@@ -45,7 +45,7 @@ class ResponseTest extends PHPUnit_Framework_TestCase
 
    public function testSend()
    {
-        $this->response->send(true);
+      $this->response->send(true);
    }
 
 
