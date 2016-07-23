@@ -281,6 +281,13 @@ class Response extends Message
         return $this->headers;
     }
 
+    public function withSession(Session $session)
+    {
+        $this->getCookies()->add($session->getCookie());
+
+        $session->close();
+    }
+
     /**
      * Resolve value for ResponseHeaderCollection creation
      *

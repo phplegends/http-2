@@ -11,7 +11,8 @@
     ],
     "minimum-stability": "stable",
     "require": {
-        "phplegends/collections": "1.*"
+        "phplegends/collections": "1.*",
+        "phplegends/session": "dev-master"
     },
 
     "autoload" : {
