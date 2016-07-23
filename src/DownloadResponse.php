@@ -2,6 +2,11 @@
 
 namespace PHPLegends\Http;
 
+/**
+ * Represents the download response
+ * 
+ * @author Wallace de Souza Vizerra <wallacemaxters@gmail.com>
+ * */
 class DownloadResponse extends Response
 {
     /**
