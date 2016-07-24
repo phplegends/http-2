@@ -9,7 +9,6 @@
             "email": "wallacemaxters@gmail.com"
         }
     ],
-    "minimum-stability": "stable",
     "require": {
         "phplegends/collections": "1.*",
         "phplegends/session": "dev-master"
