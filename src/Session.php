@@ -36,7 +36,10 @@ class Session extends BaseSession
      * */
     public function getCookie(array $parameters = [])
     {
-        $parameters['expires'] = $this->getLifetime() + time();
+        if (($lifetime = $this->getLifetime()) > 0) {
+
+            $parameters['expires'] = $lifetime + time();
+        }
 
         return Cookie::create($this->getName(), $this->getId(), $parameters);
     }
