@@ -48,8 +48,11 @@ class Session extends BaseSession
     {
         $lifetime = $this->getLifeTime();
 
-        $this->getHandler()->gc($lifetime);
-        
+        if ($this->gc->passes()) {
+
+            $this->getHandler()->gc($this->gc->getMaxLifetime());
+        }
+
         $this->write();
 
         $this->closed = true;
