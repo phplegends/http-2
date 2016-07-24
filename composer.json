@@ -10,6 +10,7 @@
         }
     ],
     "require": {
+        "php" : ">=5.4.0",
         "phplegends/collections": "1.*",
         "phplegends/session": "dev-master"
     },
