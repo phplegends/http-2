@@ -177,4 +177,42 @@ class RequestTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('Ok', $this->request->getHeaders()->getLine('x-phpunit-test'));
     }
 
+    public function test__Get()
+    {
+        $this->request->getQuery()->set('id', 1);
+
+        $this->assertEquals(
+            $this->request->getQuery()->get('id'),
+            $this->request->query['id']
+        );
+
+        $this->assertEquals(
+            $this->request->getBody()->get('age'),
+            $this->request->body['age']
+        );
+
+        $this->assertEquals(
+            $this->request->getServer()->get('HTTP_HOST'),
+            $this->request->server['HTTP_HOST']
+        );
+
+        $this->request->cookies['nome'] = 'Wallace';
+
+        $this->assertEquals(
+            $this->request->getCookies()->get('nome'),
+            $this->request->cookies['nome']
+        );
+
+        $this->assertEquals([0], $this->request->headers['Content-Length']);
+
+        try {
+
+            $this->request->sorry;
+
+        } catch (\UnexpectedValueException $e) {
+
+            $this->assertEquals("The property 'sorry' doesnt exists", $e->getMessage());
+        }
+    }
+
 }

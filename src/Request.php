@@ -425,4 +425,20 @@ class Request extends Message
 
         return $this->setHeaders($headers);
     }
+
+    /**
+     * Shortcuts to 'query', 'body', 'server', 'cookies', 'headers' methods
+     * 
+     * @return PHPLegends\Http\ParameterCollection
+     * @throws \UnexpectedValueException
+     * */
+    public function __get($key)
+    {
+        if (in_array($key, ['query', 'body', 'server', 'cookies', 'headers'])) {
+
+            return $this->{'get'. ucwords($key)}();
+        }
+
+        throw new \UnexpectedValueException("The property '{$key}' doesnt exists");
+    }
 }
