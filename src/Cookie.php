@@ -320,4 +320,13 @@ class Cookie
             $args['httpOnly']
         );
     }
+
+    /**
+     * Gets the value of cookie
+     * 
+     * */
+    public function __toString()
+    {
+        return $this->getValue();
+    }
 }
