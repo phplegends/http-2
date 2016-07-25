@@ -45,7 +45,7 @@ class ResponseTest extends PHPUnit_Framework_TestCase
 
    public function testSend()
    {
-        $this->response->send(true);
+        @$this->response->send(true);
    }
 
 
@@ -94,5 +94,15 @@ class ResponseTest extends PHPUnit_Framework_TestCase
         $cookies['name'] = 'Wallace';
 
         $this->assertEquals($cookies, $this->response->getCookies());
+   }
+
+
+   public function test__Get()
+   {
+        $this->assertEquals(['Yep'], $this->response->headers['X-ResponseTest']);
+
+        $this->response->cookies->setCookie('name', 'Wallace');
+
+        $this->assertEquals('Wallace', (string) $this->response->cookies['name']);
    }
 }
