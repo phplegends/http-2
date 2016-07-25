@@ -306,4 +306,20 @@ class Response extends Message
 
         return $this->setHeaders($headers);
     }
+
+    /**
+     * Shortcuts to 'cookies' e 'headers' methods
+     * 
+     * @return PHPLegends\Http\ParameterCollection
+     * @throws \UnexpectedValueException
+     * */
+    public function __get($key)
+    {
+        if (in_array($key, ['cookies', 'headers'])) {
+
+            return $this->{'get'. ucwords($key)}();
+        }
+
+        throw new \UnexpectedValueException("The property '{$key}' doesnt exists");
+    }
 }
