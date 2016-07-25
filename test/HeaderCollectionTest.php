@@ -49,6 +49,22 @@ class HeaderCollectionTest extends PHPUnit_Framework_TestCase
         );
     }
 
+    public function testGetOrDefault()
+    {
+        $this->assertEquals(
+            'text/html',
+            $this->header->getOrDefault('Content-Type', 'text/html')
+        );
+
+
+        $this->header->set('Content-Type', 'application/json');
+
+        $this->assertEquals(
+            ['application/json'],
+            $this->header->getOrDefault('Content-Type', 'text/html')
+        );
+    }
+
     public function testGetFormatted()
     {
         $data = $this->header->getFormatted();

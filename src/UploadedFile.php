@@ -276,6 +276,21 @@ class UploadedFile
     }
 
     /**
+     * 
+     * @return array
+     * */
+    public function toPHPFilesArray()
+    {
+        return [
+            'tmp_name' => $this->getFilename(),
+            'name'     => $this->getClientFilename(),
+            'size'     => $this->getSize(),
+            'error'    => $this->getError(),
+            'type'     => $this->getClientMediaType(),
+        ];
+    }
+
+    /**
      * Check if PHP upload keys is valid
      * @param array $file
      * @return boolean

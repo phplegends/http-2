@@ -139,6 +139,10 @@ class RequestTest extends PHPUnit_Framework_TestCase
             ]
         ];
 
+        $_SERVER['HTTP_Accept_Language'] = "pt-BR,pt;q=0.8,en-US;q=0.6,en;q=0.4,ru;q=0.2";
+
+        $_SERVER['HTTP_Accept-Encoding'] = "gzip, deflate, sdch";
+
         $r = Request::createFromGlobals();
 
         $this->assertEquals(
@@ -213,6 +217,16 @@ class RequestTest extends PHPUnit_Framework_TestCase
 
             $this->assertEquals("The property 'sorry' doesnt exists", $e->getMessage());
         }
+    }
+
+    public function testIsXhr()
+    {
+
+        $this->assertFalse($this->request->isXhr());
+
+        $this->request->getHeaders()->set('x-requested-with', 'xmlhttprequest');
+
+        $this->assertTrue($this->request->isXhr());
     }
 
 }

@@ -101,11 +101,6 @@ class Response extends Message
         $this->setContent($content);
 
         $this->resolveHeaderValue($headers);
-
-        if (! $this->getHeaders()->has('Content-Type')) {
-
-            $this->getHeaders()->set('Content-Type', 'text/html; charset=utf-8');
-        }
 	}
 
     /**
@@ -190,6 +185,12 @@ class Response extends Message
     public function sendHeaders($force = false)
     {
         if (headers_sent() && ! $force) return false;
+        
+        @header(sprintf('HTTP/%s %s %s', 
+            $this->getProtocolVersion(),
+            $this->getStatusCode(),
+            $this->getReasonPhrase()
+        ));
 
         foreach ($this->getHeaders()->getFormatted() as $line) {
 
@@ -211,7 +212,7 @@ class Response extends Message
 
         foreach ($this->getHeaders()->getCookies() as $cookie) {
 
-            setcookie(
+            @setcookie(
                 $cookie->getName(),
                 $cookie->getValue(),
                 $cookie->getExpires(),
@@ -278,6 +279,13 @@ class Response extends Message
     public function getHeaders()
     {
         return $this->headers;
+    }
+
+    public function withSession(Session $session)
+    {
+        $this->getCookies()->add($session->getCookie());
+
+        $session->close();
     }
 
     /**

@@ -21,7 +21,7 @@ class ResponseHeaderCollection extends HeaderCollection
     {
         parent::__construct($items);
 
-        $cookies && $this->setCookies($cookies);
+        $this->setCookies($cookies ?: new CookieJar);
     }
 
     /**
@@ -31,7 +31,7 @@ class ResponseHeaderCollection extends HeaderCollection
      */
     public function getCookies()
     {
-        return $this->cookies ?: $this->cookies = new CookieJar;
+        return $this->cookies;
     }
 
     /**
@@ -44,6 +44,19 @@ class ResponseHeaderCollection extends HeaderCollection
     public function setCookies(CookieJar $cookies)
     {
         $this->cookies = $cookies;
+
+        return $this;
+    }
+
+    /**
+     * Easy way to create ContentDisposition header format
+     * 
+     * */
+    public function setContentDisposition($filename)
+    {
+        $this['Content-Disposition'] = sprintf(
+            'attachment; filename="%s"', addcslashes($filename, '"\\')
+        );
 
         return $this;
     }
