@@ -139,10 +139,6 @@ class RequestTest extends PHPUnit_Framework_TestCase
             ]
         ];
 
-        $_SERVER['HTTP_Accept_Language'] = "pt-BR,pt;q=0.8,en-US;q=0.6,en;q=0.4,ru;q=0.2";
-
-        $_SERVER['HTTP_Accept-Encoding'] = "gzip, deflate, sdch";
-
         $r = Request::createFromGlobals();
 
         $this->assertEquals(

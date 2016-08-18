@@ -123,44 +123,6 @@ class Request extends Message
         return $request;
     }
 
-    public static function createUriFromGlobals()
-    {
-
-        $uri = new Uri();
-
-        if (isset($_SERVER['HTTPS'])) {
-
-            $uri->setScheme($_SERVER['HTTPS'] == 'on' ? 'https' : 'http');
-        }
-
-        if (isset($_SERVER['HTTP_HOST'])) {
-
-            $uri->setHost($_SERVER['HTTP_HOST']);
-
-        } elseif (isset($_SERVER['SERVER_NAME'])) {
-
-            $uri->setHost($_SERVER['SERVER_NAME']);
-        }
-
-        if (isset($_SERVER['SERVER_PORT'])) {
-
-            $uri->setPort($_SERVER['SERVER_PORT']);
-        }
-
-        if (isset($_SERVER['REQUEST_URI'])) {
-
-            $uri->setPath(strtok($_SERVER['REQUEST_URI'], '?'));
-        }
-
-        if (isset($_SERVER['QUERY_STRING'])) {
-
-            $uri->setQueryString($_SERVER['QUERY_STRING']);
-        }
-
-        return $uri;
-    }
-
-
     public function isSecure()
     {
         return $this->getUri()->getScheme() === 'https';
