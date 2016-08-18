@@ -111,7 +111,7 @@ class Request extends Message
 
         $uri = Uri::createFromGlobals();
 
-        $request = new self($method, $uri, $headers);
+        $request = new static($method, $uri, $headers);
 
         $request->setQuery(new ParameterCollection($_GET))
                 ->setBody(new ParameterCollection($_POST))
