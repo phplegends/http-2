@@ -32,7 +32,7 @@ class Session extends BaseSession
      * Exports the Cookie used by session
      * 
      * @param array $parameters
-     * @return Cookie
+     * @return PHPLegends\Http\Cookie
      * */
     public function getCookie(array $parameters = [])
     {
@@ -44,6 +44,10 @@ class Session extends BaseSession
         return Cookie::create($this->getName(), $this->getId(), $parameters);
     }
 
+    /**
+     * Close the session 
+     * @return void
+     * */
     public function close()
     {
         $lifetime = $this->getLifeTime();

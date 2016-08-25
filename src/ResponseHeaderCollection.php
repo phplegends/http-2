@@ -17,6 +17,10 @@ class ResponseHeaderCollection extends HeaderCollection
      * */
     protected $cookies;
 
+    /**
+     * @param array $items
+     * @param CookieJar|null $cookies
+     * */
     public function __construct(array $items = [], CookieJar $cookies = null)
     {
         parent::__construct($items);

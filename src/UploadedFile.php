@@ -141,7 +141,6 @@ class UploadedFile
         return new \SplFileObject($this->assertNotMoved()->getFilename(), 'r');
     }
 
-
     public function moveTo($targetPath)
     {
         $this->assertNotMoved()

@@ -6,7 +6,6 @@ namespace PHPLegends\Http;
  * Represents the HTTP Response
  *
  * @author Wallace de Souza Vizerra <wallacemaxters@gmail.com>
- *
  * */
 class Response extends Message
 {
@@ -281,6 +280,12 @@ class Response extends Message
         return $this->headers;
     }
 
+    /**
+     * Process the PHPLegends\Http\Session Object Cookie
+     * 
+     * @param PHPLegends\Http\Session
+     * @return void
+     * */
     public function withSession(Session $session)
     {
         $this->getCookies()->add($session->getCookie());

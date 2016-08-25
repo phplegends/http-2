@@ -29,19 +29,3 @@ function get_all_headers()
 
     return $headers;
 }
-
-
-/**
- * 
- * Creates a redirect response
- * 
- * @param string $location
- * @param string $code
- * @param array|HeaderCollection
- * @return void
- * 
- * */
-function redirect($location, $code, $headers = [])
-{
-    (new Redirector($location, $code, $headers))->send();
-}

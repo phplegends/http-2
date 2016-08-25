@@ -248,6 +248,11 @@ class Request extends Message
         return $this;
     }
 
+    /**
+     * Get content of request as Json
+     * 
+     * @return mixed
+     * */
     public function getJsonContent()
     {
 
@@ -271,12 +276,18 @@ class Request extends Message
         throw new \RunTimeException("Json error: {$message}");
     }
 
+    /**
+     * Check if request contains X-Request-With with XmlHttpRequest
+     * 
+     * @return boolean
+     * */
     public function isXhr()
     {
         return strtolower($this->getHeaders()->getLine('x-requested-with')) == 'xmlhttprequest';
     }
 
     /**
+     * Gets the request method
      *
      * @return string
      * */
@@ -286,10 +297,10 @@ class Request extends Message
     }
 
     /**
-     *
+     * Sets the request method
+     * 
      * @param string $method
      * @return self
-     *
      * */
     public function setMethod($method)
     {
@@ -299,7 +310,8 @@ class Request extends Message
     }
 
     /**
-     *
+     * Check passed methods (case insensitive)
+     * 
      * @param string $method
      * @return boolean
      * */
@@ -358,6 +370,11 @@ class Request extends Message
         return $this;
     }
 
+    /**
+     * Get the HeaderCollection of current request
+     * 
+     * @return PHPLegends\Http\HeaderCollection
+     * */
     public function getHeaders()
     {
         return $this->headers;
