@@ -150,7 +150,7 @@ class Cookie
      *
      * @return self
      */
-    public function  setExpires($expires)
+    public function setExpires($expires)
     {
         $this->expires = $expires;
 
@@ -303,10 +303,10 @@ class Cookie
     {
 
         $args += [
-          'expires'   => 0,
-          'path'      => NULL,
-          'domain'    => NULL,
-          'secure'    => false,
+          'expires'  => 0,
+          'path'     => NULL,
+          'domain'   => NULL,
+          'secure'   => false,
           'httpOnly' => false,
         ];
 
